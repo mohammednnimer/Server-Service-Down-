@@ -14,14 +14,14 @@ public class EmailParticipants {
 
     @Id
     @Column(name = "email")
-    private String Email;
+    private String email;
+
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
-
 }

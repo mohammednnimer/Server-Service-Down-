@@ -14,11 +14,15 @@ public class WhatsAppservice {
     WhatsappRepo whatsappRepo;
 
     @Transactional
-    public void addPhone(WhatsappParticipants whatsappParticipants){
+    public boolean addPhone(WhatsappParticipants whatsappParticipants){
+        if (whatsappRepo.existsByphone(whatsappParticipants.getPhoneNumber())!=null) {
+            return false;
+        }
         whatsappRepo.persist(whatsappParticipants);
+        return true;
     }
     @Transactional
-    public boolean deleteEmail(String phone){
+    public boolean deletephone(String phone){
         long count= whatsappRepo.deletePhone(phone);
         return count > 0;
     }

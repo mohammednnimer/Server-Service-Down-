@@ -14,6 +14,9 @@ public class GeneralSettings {
     private String settingId;
 
 
+    @Column(name = "setting_Value")
+    private String settingValue;
+
     public String getSettingValue() {
         return settingValue;
     }
@@ -30,6 +33,4 @@ public class GeneralSettings {
         this.settingId = settingId;
     }
 
-    @Column(name = "setting_Value")
-    private String settingValue;
 }

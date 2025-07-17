@@ -1,13 +1,16 @@
 package com.asd.controller;
 
 
+import com.asd.dto.UpdateSettingEmail;
+import com.asd.service.SettingService;
+import com.utils.constant.ErrorMsgs;
+import com.utils.constant.SuccMsgs;
 import com.utils.constant.SystemPaths;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 
 @Path(SystemPaths.Setting)
@@ -15,14 +18,19 @@ import jakarta.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SettingsResource {
 
+    @Inject
+    SettingService settingService;
 
-    @GET
-    public String Hello()
+
+    @Path("/update-email")
+    @PATCH
+    public Response updateEmail(UpdateSettingEmail updateSettingEmail)
     {
-        return "hello";
+        settingService.updateEmail(updateSettingEmail);
+        return Response.status(Response.Status.OK)
+                .entity(new com.db.entitie.Response(Response.Status.OK, SuccMsgs.updatesucc)).build();
 
     }
-
 
 
 

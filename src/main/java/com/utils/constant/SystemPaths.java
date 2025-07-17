@@ -14,8 +14,10 @@ public interface SystemPaths {
 
     String Setting="/settings";
     String Email="/settings/email";
+    String whatsApp="/settings/whatsapp";
     String add="/add";
-    String addsucc="The entry process was successful.";
+
+    String exist="Object already exist";
 
 
 }

@@ -14,9 +14,13 @@ public class EmailService {
 
 
     @Transactional
-  public void addEmail(EmailParticipants emailParticipants){
-      emailRepo.persist(emailParticipants);
-  }
+    public boolean  addEmail(EmailParticipants emailParticipants) {
+        if (emailRepo.existsByEmail(emailParticipants.getEmail())!=null) {
+            return false;
+        }
+        emailRepo.persist(emailParticipants);
+        return true;
+    }
   @Transactional
     public boolean deleteEmail(String email){
       long count= emailRepo.deleteEmail(email);

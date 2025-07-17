@@ -4,6 +4,7 @@ package com.asd.controller;
 import com.asd.service.EmailService;
 import com.db.entitie.EmailParticipants;
 import com.utils.constant.ErrorMsgs;
+import com.utils.constant.SuccMsgs;
 import com.utils.constant.SystemPaths;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -23,17 +24,21 @@ public class EmailResource {
     @POST
     @Path(SystemPaths.add)
     public Response addEmail(EmailParticipants emailParticipants){
-        emailService.addEmail(emailParticipants);
-        return Response.status(Response.Status.OK).entity(new com.db.entitie.Response(Response.Status.OK,SystemPaths.addsucc)).build();
+       if(!emailService.addEmail(emailParticipants))
+       {
+           return Response.status(Response.Status.NOT_ACCEPTABLE).entity(new com.db.entitie.Response(Response.Status.NOT_ACCEPTABLE,SystemPaths.exist)).build();
+
+       }
+        return Response.status(Response.Status.OK).entity(new com.db.entitie.Response(Response.Status.OK, SuccMsgs.addsucc)).build();
     }
 
     @DELETE
-    @Path(SystemPaths.DELETE+"{id}")
-    public Response deleteEmail(String email)
+    @Path(SystemPaths.DELETE+"/{email}")
+    public Response deleteEmail(@PathParam("email") String email)
     {
         if(emailService.deleteEmail(email))
         {
-            return Response.status(Response.Status.OK).entity(new com.db.entitie.Response(Response.Status.OK,SystemPaths.addsucc)).build();
+            return Response.status(Response.Status.OK).entity(new com.db.entitie.Response(Response.Status.OK,SuccMsgs.deletsucc)).build();
 
         }else {
 
