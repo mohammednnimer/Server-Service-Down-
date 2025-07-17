@@ -3,6 +3,7 @@ package com.asd.controller;
 import com.asd.dto.SearchCriteria;
 
 import com.asd.dto.UpdateService;
+import com.asd.logic.servicedown.controller.CheckerBean;
 import com.asd.service.ServicePanel;
 import com.db.entitie.PanelService;
 import com.utils.constant.ErrorMsgs;
@@ -18,6 +19,8 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ServiceResource {
 
+    @Inject
+    CheckerBean checkerBean;
 
     @Inject
     ServicePanel ServicePanel;
