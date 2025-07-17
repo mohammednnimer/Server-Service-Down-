@@ -1,7 +1,10 @@
 
 package com.db.entitie;
 
+import com.asd.enums.CertificateStatus;
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
@@ -38,12 +41,44 @@ public class PanelService {
     @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
+    @Column(name = "certificate_status")
+    private CertificateStatus certificateStatus;
+
+    @Column(name = "last_shutdown")
+    private LocalDateTime date;
+
     @Column(name = "updated_by")
     private String updatedBy;
 
     @Column(name = "deleted" )
     private boolean isdeleted=false;
 
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public CertificateStatus getCertificateStatus() {
+        return certificateStatus;
+    }
+
+    public void setCertificateStatus(CertificateStatus certificateStatus) {
+        this.certificateStatus = certificateStatus;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
     public boolean isIsdeleted() {
         return isdeleted;

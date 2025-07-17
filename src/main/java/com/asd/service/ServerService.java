@@ -121,6 +121,7 @@ public class ServerService {
 //        } else {
 //            return Response.ok(ListAllServer()).build();
 //        }
+
         return serverRepo.search(filtering.getDNS(), filtering.getIP(), filtering.getGernalSearch());
     }
 

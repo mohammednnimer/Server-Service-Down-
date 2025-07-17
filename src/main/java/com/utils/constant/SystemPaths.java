@@ -12,4 +12,7 @@ public interface SystemPaths {
     String DELETE = "/delete";
     String UPDATE = "/update";
 
+    String Setting="/settings";
+    String Email="/email";
+
 }
