@@ -10,6 +10,9 @@ import jakarta.persistence.Table;
 @Table(name = "WhatsappParticipants")
 public class WhatsappParticipants {
 
+    @Id
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -19,7 +22,5 @@ public class WhatsappParticipants {
         this.phoneNumber = phoneNumber;
     }
 
-    @Id
-    @Column(name = "phone_number")
-    private String phoneNumber;
+
 }

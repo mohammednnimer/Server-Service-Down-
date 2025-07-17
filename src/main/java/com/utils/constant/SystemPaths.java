@@ -13,6 +13,9 @@ public interface SystemPaths {
     String UPDATE = "/update";
 
     String Setting="/settings";
-    String Email="/email";
+    String Email="/settings/email";
+    String add="/add";
+    String addsucc="The entry process was successful.";
+
 
 }

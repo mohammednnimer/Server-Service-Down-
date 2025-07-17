@@ -7,4 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class EmailRepo implements PanacheRepository<EmailParticipants> {
+    public long deleteEmail(String email) {
+        return delete("Email = ?1", email);
+    }
 }
