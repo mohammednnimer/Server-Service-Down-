@@ -10,21 +10,12 @@ import java.util.List;
 @ApplicationScoped
 public class ServerRepo implements PanacheRepository<PanelServer> {
 
-//    public List<PanelServer> ListByDNSAndIP(String DNS,String IP) {
-//        return list("ipAddress like ?1 and dns like ?2 and isdeleted = false","%" + IP + "%","%" + DNS + "%");
-//    }
-//    public List<PanelServer> ListByDNS(String DNS) {
-//        return list("dns like ?1 and isdeleted = false","%" + DNS + "%");
-//    }
-//    public List<PanelServer> ListByIP(String IP) {
-//
-//        return list("ipAddress like ?1 and isdeleted = false", "%" + IP + "%");
-//    }
+
 
 
     public List<PanelServer> GetAllServer(int limit,int page) {
         int offset = (page-1) * limit;
-        return find("isdeleted = false").range(offset, limit - 1).list();
+        return find("isdeleted = false order by creationDate desc").range(offset,offset+ limit - 1).list();
     }
 
 
@@ -61,9 +52,13 @@ public class ServerRepo implements PanacheRepository<PanelServer> {
             query += " AND LOWER(ipAddress) LIKE '%" + ip.toLowerCase() + "%'";
         }
 
+        query+=" order by creationDate desc ";
         return list(query);
     }
 
+    public boolean isExist(String dns,String ip){
+        return (find("dns = ?1 and ipAddress = ?2",dns,ip).count() > 0);
+    }
 
 
 

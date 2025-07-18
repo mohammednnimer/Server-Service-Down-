@@ -12,29 +12,27 @@ public class SearchCriteria {
 
     @JsonIgnore
     public String getGernalSearch() {
-        return GernalSearch;
+        return GeneralSearch;
     }
 
     @JsonIgnore
     public void setGernalSearch(String gernalSearch) {
-        GernalSearch = gernalSearch;
+        GeneralSearch = gernalSearch;
     }
 
     @JsonProperty("IP")
     private String IP;
 
-    @JsonProperty("GernalSearch")
-    private String GernalSearch;
+    @JsonProperty("GeneralSearch")
+    private String GeneralSearch;
 
     public SearchCriteria(String DNS, int PORT, String IP,String GernalSearch ) {
         this.DNS = DNS;
         this.PORT = PORT;
         this.IP = IP;
-        this.GernalSearch = GernalSearch;
+        this.GeneralSearch = GernalSearch;
     }
-    public SearchCriteria() {
-
-    }
+    public SearchCriteria() {}
 
     @JsonIgnore
     public String getDNS() {

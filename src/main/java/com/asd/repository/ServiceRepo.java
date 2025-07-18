@@ -37,8 +37,8 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
     public List<PanelService> getAllServices(int limit,int page) {
 
         int offset = (page-1) * limit;
-        return find("isdeleted = false")
-                .range(offset, limit - 1)
+        return find("isdeleted = false order by creationDate desc")
+                .range(offset, offset+limit - 1)
                 .list();
     }
 
@@ -58,7 +58,8 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
                         + "OR LOWER(updatedBy) LIKE '%" + lowerTerm + "%' ";
 
                 if (term.matches("\\d+")) {
-                    query += " OR servicePort = " + term + " ";
+             //       query += " OR servicePort = " + term + " ";
+                    query += " OR CONCAT('', servicePort) LIKE '%" + term + "%' ";
                 }
                 query += ")";
             }
@@ -69,8 +70,9 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
         }
 
         if (port != null) {
-            query += " AND servicePort = " + port;
+            query += " AND CONCAT('', servicePort) LIKE '%" + port + "%' ";
         }
+        query+=" order by creationDate desc ";
 
         return list(query);
     }

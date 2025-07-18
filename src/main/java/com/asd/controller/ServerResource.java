@@ -45,8 +45,16 @@ public class ServerResource {
     @POST
     @Path(SystemPaths.CREATE)
     public Response Create(PanelServer panelServer) {
-        Server.Create(panelServer);
-        return Response.ok(new com.db.entitie.Response(Response.Status.OK, SuccMsgs.succcreate)).build();
+        if(Server.Create(panelServer))
+        {
+            return Response.ok(new com.db.entitie.Response(Response.Status.OK, SuccMsgs.succcreate)).build();
+        }
+
+        return Response.status(Response.Status.NOT_ACCEPTABLE).entity(
+                new com.db.entitie.Response(Response.Status.NOT_ACCEPTABLE,"There is a server with the same IP And DNS ")).build();
+
+
+
     }
 
     @DELETE

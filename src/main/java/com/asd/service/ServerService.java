@@ -44,11 +44,18 @@ public class ServerService {
         return serverRepo.listAll();
     }
     @Transactional
-    public void Create(PanelServer server) {
+    public boolean Create(PanelServer server) {
+        if(serverRepo.isExist(server.getDns(), server.getIpAddress())){
+           return false;
+        }
+
+
         server.setId(UUID.randomUUID().toString());
         server.setCreationDate(LocalDateTime.now());
         server.setIsdeleted(false);
         serverRepo.persist(server);
+        return true;
+
     }
     public PanelServer GetServer(String id) {
        return serverRepo.getServer(id);
@@ -105,12 +112,9 @@ public class ServerService {
 
             }
         }
-        return Response.status(Response.Status.OK).entity(serverRepo.GetAllServer(50, 1)).build();
+        return Response.status(Response.Status.OK).entity(serverRepo.GetAllServer(limit, page)).build();
 
     }
-
-
-
     public List<PanelServer> GetByFilter(SearchCriteria filtering) {
 //        if (filtering.getDNS() != null && filtering.getIP() != null) {
 //            return Response.ok(ListByDNSAndIP(filtering.getDNS(), filtering.getIP())).build();
