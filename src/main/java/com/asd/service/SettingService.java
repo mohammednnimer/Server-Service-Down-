@@ -15,19 +15,19 @@ public class SettingService {
     @Transactional
     public void updateEmail(UpdateSettingEmail updateSettingEmail){
         if (updateSettingEmail.getFrom()!=null){
-            settingRepo.updateemail("email_from",updateSettingEmail.getFrom());
+            settingRepo.updateSetting("email_from",updateSettingEmail.getFrom());
         }if (updateSettingEmail.getHost()!=null){
 
-            settingRepo.updateemail("email_host",updateSettingEmail.getHost());
+            settingRepo.updateSetting("email_host",updateSettingEmail.getHost());
         }
         if (updateSettingEmail.getPassword()!=null){
-            settingRepo.updateemail("email_password",updateSettingEmail.getPassword());
+            settingRepo.updateSetting("email_password",updateSettingEmail.getPassword());
         }
         if (updateSettingEmail.getPort()!=null){
-            settingRepo.updateemail("email_port",updateSettingEmail.getPort() );
+            settingRepo.updateSetting("email_port",updateSettingEmail.getPort() );
         }
         if (updateSettingEmail.getUsername()!=null){
-            settingRepo.updateemail("email_username",updateSettingEmail.getUsername());
+            settingRepo.updateSetting("email_username",updateSettingEmail.getUsername());
         }
 
 

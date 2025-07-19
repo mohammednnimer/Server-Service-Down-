@@ -1,18 +1,35 @@
 package com.asd.logic.servicedown.loaders;
 
 import com.asd.logic.servicedown.models.*;
-import com.asd.logic.servicedown.utils.ConstantValues;
+import com.asd.repository.EmailRepo;
+import com.asd.repository.ServiceRepo;
+import com.asd.repository.SettingRepo;
+import com.asd.repository.WhatsappRepo;
+import com.db.entitie.GeneralSettings;
+import com.db.entitie.PanelService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
-public abstract class Loaders {
-private static WhatsAppConfigModel whatsAppConfigModel =  null ;
-    public  static WhatsAppConfigModel loadWhatsAppConfig() {
+@ApplicationScoped
+public class Loaders {
+
+    @Inject
+    ServiceRepo serviceRepo;
+
+    @Inject
+    SettingRepo settingRepo;
+
+    @Inject
+    EmailRepo emailRepo;
+
+    @Inject
+    WhatsappRepo whatsappRepo;
+
+private WhatsAppConfigModel whatsAppConfigModel =  null ;
+    public  WhatsAppConfigModel loadWhatsAppConfig() {
         if (whatsAppConfigModel == null) {
             whatsAppConfigModel = loadWhatsAppConfigUtil() ;
             return  whatsAppConfigModel ;
@@ -20,110 +37,70 @@ private static WhatsAppConfigModel whatsAppConfigModel =  null ;
         return  whatsAppConfigModel ;
     }
 
-    private static WhatsAppConfigModel loadWhatsAppConfigUtil() {
-        try {
-            Scanner scanner = new Scanner(new File(ConstantValues.WHATS_APP_CONF_FILE)) ;
-            List<String> mobilesPhone = new LinkedList<>() ;
-            String scope_whats_app_service = "null" ;
-            while (scanner.hasNext()){
-                String line = scanner.nextLine() ;
-                if (line.startsWith("whats.url=")){
-                    scope_whats_app_service = line.replaceAll("whats.url=" , "");
-                    scope_whats_app_service = scope_whats_app_service.trim().replaceAll(" " ,"");
-                }else if (line.startsWith("mobile")){
-                    mobilesPhone.add(line.trim().replaceAll("mobile\\d=" , "")) ;
-                }
-            }
-            WhatsAppConfigModel whatsAppConfigModel = new WhatsAppConfigModel();
-            whatsAppConfigModel.setUrl(scope_whats_app_service);
-            whatsAppConfigModel.setMobiles(mobilesPhone);
-            return whatsAppConfigModel ;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    private WhatsAppConfigModel loadWhatsAppConfigUtil() {
+        GeneralSettings url = settingRepo.getSetting("whatsapp_url");
+        WhatsAppConfigModel whatsAppConfigModel = new WhatsAppConfigModel();
+        whatsAppConfigModel.setUrl(url.getSettingValue());
 
         return null ;
     }
 
-    public static List<ServiceModel> loadServices() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(ConstantValues.SERVICE_CONF_FILE)) ;
-        List<ServiceModel> serviceModels = new LinkedList<>() ;
-        while (scanner.hasNext()) {
-            String line = scanner.nextLine();
-            if (line.startsWith("http://") || line.startsWith("https://") ){
+    public List<ServiceModel> loadServices() {
+        List<ServiceModel> serviceModels = new LinkedList<>();
+        for (PanelService service : serviceRepo.getAllServices(-1, -1)) {
+            if (service.getServiceName().startsWith("http://") || service.getServiceName().startsWith("https://") ){
                 ServiceModel serviceModel = new ServiceModel() ;
 
-               serviceModel.setServiceUrl(line.trim());
+                serviceModel.setServiceUrl(service.getServiceName());
+                serviceModel.setIsBlocked(service.isBlocked());
+                serviceModel.setServiceStatus(service.getServiceStatus());
+                serviceModel.setCertificateStatus(service.getCertificateStatus());
+                serviceModel.setLastShutdown(service.getLastShutdown());
                 serviceModels.add(serviceModel) ;
             }
             else {
-                System.err.println("Your Line Must Start With Http protocol : "  + line);
+                System.err.println("Error while converting PanelService into Server Model: " +
+                        "Http protocol couldn't be found within the URL: "  + service.getServiceName());
             }
 
         }
-        scanner.close();
         return serviceModels ;
     }
 
-    public static StoppingTime loadIntervalTime() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(ConstantValues.SETTING_CONF_FILE));
-        StoppingTime  stoppingTime = new StoppingTime();
-        while (scanner.hasNext()) {
-            String line = scanner.nextLine();
-            if (line.startsWith("stopTimeFrom=")){
-                stoppingTime.setStopTimeFrom(line.trim().replaceAll("stopTimeFrom=" , ""));
-            }else if (line.startsWith("stopTimeTo=")){
-                stoppingTime.setStopTimeTo(line.trim().replaceAll("stopTimeTo=" , ""));
+    public StoppingTime loadIntervalTime() {
+        GeneralSettings stopTimeFrom = settingRepo.getSetting("stop_time_from");
+        GeneralSettings stopTimeTo = settingRepo.getSetting("stop_time_to");
 
-            }
-        }
-        scanner.close();
-        return stoppingTime ;
+        StoppingTime  stoppingTime = new StoppingTime();
+        stoppingTime.setStopTimeFrom(stopTimeFrom.getSettingValue());
+        stoppingTime.setStopTimeTo(stopTimeTo.getSettingValue());
+
+        return stoppingTime;
     }
 
+    private EmailConfigModel emailConfigModel = null;
 
-    private static EmailConfigModel emailConfigModel = null;
-
-    public static EmailConfigModel loadEmailConfig() {
+    public EmailConfigModel loadEmailConfig() {
         if (emailConfigModel == null) {
             emailConfigModel = loadEmailConfigUtil();
         }
         return emailConfigModel;
     }
 
-    private static EmailConfigModel loadEmailConfigUtil() {
-        try {
-            Scanner scanner = new Scanner(new File(ConstantValues.EMAIL_CONF_FILE));
-            EmailConfigModel config = new EmailConfigModel();
-            List<String> toList = new LinkedList<>();
+    private EmailConfigModel loadEmailConfigUtil() {
+        GeneralSettings host = settingRepo.getSetting("email_host");
+        GeneralSettings port = settingRepo.getSetting("email_port");
+        GeneralSettings username = settingRepo.getSetting("email_username");
+        GeneralSettings password = settingRepo.getSetting("email_password");
+        GeneralSettings from = settingRepo.getSetting("email_from");
 
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.startsWith("host=")) {
-                    config.setHost(line.substring(5));
-                } else if (line.startsWith("port=")) {
-                    config.setPort(Integer.parseInt(line.substring(5)));
-                } else if (line.startsWith("username=")) {
-                    config.setUsername(line.substring(9));
-                } else if (line.startsWith("password=")) {
-                    config.setPassword(line.substring(9));
-                } else if (line.startsWith("from=")) {
-                    config.setFrom(line.substring(5));
-                } else if (line.startsWith("to=")) {
-                    String[] emails = line.substring(3).split(",");
-                    toList.addAll(Arrays.asList(emails));
-                }
-            }
-            config.setTo(toList);
-            scanner.close();
-            return config;
-        } catch (FileNotFoundException e) {
-            System.err.println("Email config file not found: " + e.getMessage());
-            return null;
-        }
+        EmailConfigModel config = new EmailConfigModel();
+        config.setHost(host.getSettingValue());
+        config.setPort(port.getSettingValue());
+        config.setPassword(password.getSettingValue());
+        config.setUsername(username.getSettingValue());
+        config.setFrom(from.getSettingValue());
+
+        return config;
     }
-
-
-
 }

@@ -1,66 +1,85 @@
 package com.asd.logic.servicedown.controller;
 
+import com.asd.enums.CertificateStatus;
 import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.CertificateStatusModel;
 import com.asd.logic.servicedown.models.ServiceModel;
 import com.asd.logic.servicedown.services.*;
-import com.asd.logic.servicedown.utils.ICertStatus;
+import com.asd.repository.ServiceRepo;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.LinkedList;
 import java.util.List;
+
+@ApplicationScoped
 public class ControllerManager {
-private WebsiteChecker websiteChecker = new WebsiteChecker();
-private CertificateChecker certificateChecker = new CertificateChecker();
+    @Inject
+    ServiceRepo serviceRepo;
+    private WebsiteChecker websiteChecker = new WebsiteChecker();
 
-public void  mainFun ()  {
-    List<ServiceModel> serviceModelList = new LinkedList<>();
-    try {
-        System.out.println("Starting Loading Services from File ... ");
-        serviceModelList=  Loaders.loadServices() ;
-        System.out.println("Finished  Loading Services from File ... ");
+    @Inject
+    Loaders loaders;
 
-        System.out.println("Services : " + serviceModelList.toString());
+    @Inject
+    CertNotificationTracker certNotificationTracker;
+
+    @Inject
+    NotificationServices notificationServices;
+
+    @Inject
+    ServicesUtil servicesUtil;
+
+    @Inject
+    CertificateChecker certificateChecker;
+
+    public void mainFun() {
+        List<ServiceModel> serviceModelList = new LinkedList<>();
+        try {
+            System.out.println("Starting Loading Services from File ... ");
+            serviceModelList = loaders.loadServices();
+            System.out.println("Finished  Loading Services from File ... ");
+
+            System.out.println("Services : " + serviceModelList.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        for (ServiceModel serviceModel : serviceModelList) {
+            try {
+                boolean status = websiteChecker.isWebsiteUp(serviceModel);
+                if (!status) {
+                    if (!servicesUtil.withIntervalStopTime() && !serviceModel.getIsBlocked()) {
+                        notificationServices.sendWhatsAppMsg(serviceModel);
+
+                    }
+                }
+
+                if (serviceModel.getHttps()) {
+                    CertificateStatusModel certificateStatusModel = certificateChecker.checkCertificate(serviceModel);
+                    if (certificateStatusModel.getStatus() == CertificateStatus.EXPIRED || certificateStatusModel.getStatus() == CertificateStatus.EXPIRING_SOON) {
+                        if (!servicesUtil.withIntervalStopTime() && !serviceModel.getIsBlocked()) {
+                            if (certNotificationTracker.shouldNotify(serviceModel.getServiceUrl())) {
+                                notificationServices.sendEmail(certificateStatusModel);
+                                certNotificationTracker.updateLastSent(serviceModel.getServiceUrl());
+                            } else {
+                                System.out.println("⏳ No notification sent for " + serviceModel.getServiceUrl() + ", waiting 8 hours...");
+                            }
+                        }
+                    }
+                } else {
+                    serviceRepo.updateCertificate(serviceModel.getServiceUrl(), CertificateStatus.NONE);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
     }
-    catch (Exception e ) {
-        e.printStackTrace();
-        System.exit(1);
-    }
-
-    NotificationServices notificationServices = new NotificationServices();
-   for (ServiceModel serviceModel : serviceModelList ) {
-       try {
-           boolean status = websiteChecker.isWebsiteUp(serviceModel) ;
-           if (!status){
-               if (!ServicesUtil.withIntervalStopTime() && !serviceModel.getIsBlocked()){
-                   notificationServices.sendWhatsAppMsg(serviceModel) ;
-
-               }
-           }
-
-           if (serviceModel.getHttps()) {
-               CertificateStatusModel certificateStatusModel = certificateChecker.checkCertificate(serviceModel);
-               if (certificateStatusModel.getStatus().equalsIgnoreCase(ICertStatus.EXPIRED) || certificateStatusModel.getStatus().equalsIgnoreCase(ICertStatus.EXPIRING_SOON) )  {
-                   if (!ServicesUtil.withIntervalStopTime() && !serviceModel.getIsBlocked()) {
-                       if (CertNotificationTracker.shouldNotify(serviceModel.getServiceUrl())) {
-                           notificationServices.sendEmail(certificateStatusModel);
-                           CertNotificationTracker.updateLastSent(serviceModel.getServiceUrl());
-                       } else {
-                           System.out.println("⏳ No notification sent for " + serviceModel.getServiceUrl() + ", waiting 8 hours...");
-                       }
-                   }
-               }
-           }
-
-
-       }
-       catch (Exception e ) {
-           e.printStackTrace();
-       }
-
-   }
-
-
-
-}
 }

@@ -15,7 +15,7 @@ public class WhatsAppservice {
 
     @Transactional
     public boolean addPhone(WhatsappParticipants whatsappParticipants){
-        if (whatsappRepo.existsByphone(whatsappParticipants.getPhoneNumber())!=null) {
+        if (whatsappRepo.existsByPhone(whatsappParticipants.getPhoneNumber())!=null) {
             return false;
         }
         whatsappRepo.persist(whatsappParticipants);

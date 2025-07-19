@@ -1,13 +1,19 @@
 package com.asd.logic.servicedown.models;
 
 
-import com.asd.logic.servicedown.utils.ConstantValues;
+import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
+
+import java.time.LocalDateTime;
 
 public class ServiceModel {
 
     private String serviceUrl ;
     private Boolean isBlocked = false;
-    private Boolean isHttps ;
+    private Boolean isHttps;
+    private LocalDateTime lastShutdown;
+    private CertificateStatus certificateStatus;
+    private ServiceStatus serviceStatus;
 
     public Boolean getBlocked() {
         return isBlocked;
@@ -38,15 +44,6 @@ public class ServiceModel {
     }
 
     public void setServiceUrl(String serviceUrl) {
-
-        String [] strings = serviceUrl.split(";");
-        if (strings.length > 1 ) {
-            if (strings[1].startsWith(ConstantValues.BLOCKED)){
-                setIsBlocked(true);
-            }
-        }
-        serviceUrl =    serviceUrl.replaceAll(";"+ ConstantValues.BLOCKED, "" );
-
         if (serviceUrl.contains("https")){
             isHttps = true;
         }
@@ -61,5 +58,29 @@ public class ServiceModel {
         return "ServiceModel{" +
                 "serviceUrl='" + serviceUrl + '\'' +
                 '}';
+    }
+
+    public LocalDateTime getLastShutdown() {
+        return lastShutdown;
+    }
+
+    public void setLastShutdown(LocalDateTime lastShutdown) {
+        this.lastShutdown = lastShutdown;
+    }
+
+    public CertificateStatus getCertificateStatus() {
+        return certificateStatus;
+    }
+
+    public void setCertificateStatus(CertificateStatus certificateStatus) {
+        this.certificateStatus = certificateStatus;
+    }
+
+    public ServiceStatus getServiceStatus() {
+        return serviceStatus;
+    }
+
+    public void setServiceStatus(ServiceStatus serviceStatus) {
+        this.serviceStatus = serviceStatus;
     }
 }

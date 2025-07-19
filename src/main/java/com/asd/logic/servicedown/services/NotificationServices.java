@@ -3,7 +3,14 @@ package com.asd.logic.servicedown.services;
 import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.*;
 import com.asd.logic.servicedown.utils.HttpClientUtil;
+import com.asd.repository.EmailRepo;
+import com.asd.repository.WhatsappRepo;
+import com.db.entitie.EmailParticipants;
+import com.db.entitie.WhatsappParticipants;
 import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -12,27 +19,38 @@ import java.util.Properties;
 
 import static com.asd.logic.servicedown.services.CertificateMessageGeneratorSafe.generateCertificateMessage;
 
-
+@ApplicationScoped
 public class NotificationServices {
-    private WhatsAppConfigModel whatsAppConfigModel = Loaders.loadWhatsAppConfig();
 
+    @Inject
+    Loaders loaders;
 
+    @Inject
+    EmailRepo emailRepo;
 
+    @Inject
+    WhatsappRepo whatsappRepo;
 
+    private WhatsAppConfigModel whatsAppConfigModel;
 
+    @PostConstruct
+    void init() {
+        this.whatsAppConfigModel = loaders.loadWhatsAppConfig();
+    }
 
     public boolean sendWhatsAppMsg(ServiceModel serviceModel) {
 
         try {
-            for (String phone : whatsAppConfigModel.getMobiles()){
+            for (WhatsappParticipants participants : whatsappRepo.getAllParticipants()){
                 ReceiverModel receiverModel = new ReceiverModel();
                 receiverModel.setMsg(getMsg(serviceModel));
-                receiverModel.setMobNum(phone);
+                receiverModel.setMobNum(participants.getPhoneNumber());
                 TypeReference<String> stringTypeReference = new TypeReference<String>() {
                 };
-              String string =   HttpClientUtil.sendPostRequest(whatsAppConfigModel.getUrl() , receiverModel , stringTypeReference) ;
 
-              System.out.println("Message Sent to this Mobile Sucesfuly  " + receiverModel.toString());
+                HttpClientUtil.sendPostRequest(whatsAppConfigModel.getUrl() , receiverModel , stringTypeReference) ;
+
+                System.out.println("Message Sent to this Mobile Sucesfuly  " + receiverModel.toString());
             }
             return true ;
 
@@ -48,13 +66,14 @@ public class NotificationServices {
     public boolean sendWhatsAppMsg(CertificateStatusModel certificateStatusModel) {
 
         try {
-            for (String phone : whatsAppConfigModel.getMobiles()){
+            for (WhatsappParticipants participants : whatsappRepo.getAllParticipants()){
                 ReceiverModel receiverModel = new ReceiverModel();
                 receiverModel.setMsg(generateCertificateMessage(certificateStatusModel));
-                receiverModel.setMobNum(phone);
+                receiverModel.setMobNum(participants.getPhoneNumber());
                 TypeReference<String> stringTypeReference = new TypeReference<String>() {
                 };
-                String string =   HttpClientUtil.sendPostRequest(whatsAppConfigModel.getUrl() , receiverModel , stringTypeReference) ;
+
+                HttpClientUtil.sendPostRequest(whatsAppConfigModel.getUrl() , receiverModel , stringTypeReference) ;
 
                 System.out.println("Message Sent to this Mobile Sucesfuly  " + receiverModel.toString());
             }
@@ -70,7 +89,7 @@ public class NotificationServices {
 
     }
     public void sendEmail(CertificateStatusModel certificateStatus) {
-        EmailConfigModel emailConfig = Loaders.loadEmailConfig();
+        EmailConfigModel emailConfig = loaders.loadEmailConfig();
         if (emailConfig == null) {
             System.err.println("Email configuration not loaded");
             return;
@@ -96,10 +115,10 @@ public class NotificationServices {
             message.setFrom(new InternetAddress(emailConfig.getFrom()));
 
             // Add all recipients
-            for (String recipient : emailConfig.getTo()) {
+            for (EmailParticipants recipient : emailRepo.getAllParticipants()) {
                 message.addRecipient(
                         Message.RecipientType.TO,
-                        new InternetAddress(recipient.trim())
+                        new InternetAddress(recipient.getEmail().trim())
                 );
             }
 

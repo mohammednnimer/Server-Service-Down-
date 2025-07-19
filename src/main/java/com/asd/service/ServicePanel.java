@@ -61,7 +61,7 @@ public class ServicePanel {
         }
         service.setId(UUID.randomUUID().toString());
         service.setCreationDate(LocalDateTime.now());
-        service.setIsdeleted(false);
+        service.setIsDeleted(false);
         serviceRepo.persist(service);
         return true;
     }
@@ -77,7 +77,7 @@ public class ServicePanel {
             return false;
         }
         else{
-            service.setIsdeleted(true);
+            service.setIsDeleted(true);
             service.setUpdatedDate(LocalDateTime.now());
             return true;
         }

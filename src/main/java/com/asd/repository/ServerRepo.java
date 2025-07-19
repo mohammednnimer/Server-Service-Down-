@@ -10,14 +10,10 @@ import java.util.List;
 @ApplicationScoped
 public class ServerRepo implements PanacheRepository<PanelServer> {
 
-
-
-
     public List<PanelServer> GetAllServer(int limit,int page) {
         int offset = (page-1) * limit;
         return find("isdeleted = false order by creationDate desc").range(offset,offset+ limit - 1).list();
     }
-
 
     public PanelServer getServer(String id) {
         return find("id = ?1 and isdeleted = false ",id).firstResult();

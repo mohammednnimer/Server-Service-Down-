@@ -2,6 +2,7 @@
 package com.db.entitie;
 
 import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -44,17 +45,21 @@ public class PanelService {
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "certificate_status")
     private CertificateStatus certificateStatus;
 
+    @Column(name = "service_status")
+    private ServiceStatus serviceStatus;
+
     @Column(name = "last_shutdown")
-    private LocalDateTime date;
+    private LocalDateTime lastShutdown;
 
     @Column(name = "updated_by")
     private String updatedBy;
 
     @Column(name = "deleted" )
-    private boolean isdeleted=false;
+    private boolean isDeleted = false;
 
     public boolean isBlocked() {
         return isBlocked;
@@ -72,20 +77,16 @@ public class PanelService {
         this.certificateStatus = certificateStatus;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getLastShutdown() {
+        return lastShutdown;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setLastShutdown(LocalDateTime lastShutdown) {
+        this.lastShutdown = lastShutdown;
     }
 
-    public boolean isIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(boolean isdeleted) {
-        this.isdeleted = isdeleted;
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
 
@@ -167,5 +168,17 @@ public class PanelService {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public ServiceStatus getServiceStatus() {
+        return serviceStatus;
+    }
+
+    public void setServiceStatus(ServiceStatus serviceStatus) {
+        this.serviceStatus = serviceStatus;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
     }
 }

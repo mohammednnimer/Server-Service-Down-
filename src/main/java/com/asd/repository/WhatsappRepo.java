@@ -5,6 +5,8 @@ import com.db.entitie.WhatsappParticipants;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.List;
+
 @ApplicationScoped
 public class WhatsappRepo implements PanacheRepository<WhatsappParticipants> {
 
@@ -13,8 +15,12 @@ public class WhatsappRepo implements PanacheRepository<WhatsappParticipants> {
         return delete("phoneNumber = ?1", phone);
     }
 
-    public WhatsappParticipants existsByphone(String phone) {
+    public WhatsappParticipants existsByPhone(String phone) {
         return find("phoneNumber = ?1", phone).firstResult() ;
+    }
+
+    public List<WhatsappParticipants> getAllParticipants() {
+        return listAll();
     }
 
 }

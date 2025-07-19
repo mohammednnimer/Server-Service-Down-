@@ -1,22 +1,24 @@
 package com.asd.logic.servicedown.models;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+@ApplicationScoped
 public class StoppingTime {
 
-    private LocalTime  stopTimeFrom , stopTimeTo ;
-    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private LocalTime stopTimeFrom, stopTimeTo;
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-
-    public LocalTime  getStopTimeFrom() {
+    public LocalTime getStopTimeFrom() {
         return stopTimeFrom;
     }
 
     public void setStopTimeFrom(String stopTimeFrom) {
-        LocalTime fromTime = LocalTime.parse(stopTimeFrom, timeFormatter);
+        if (stopTimeFrom == null || stopTimeFrom.isEmpty()) return;
 
-        this.stopTimeFrom = fromTime;
+        this.stopTimeFrom = LocalTime.parse(stopTimeFrom, timeFormatter);
     }
 
     public LocalTime getStopTimeTo() {
@@ -24,8 +26,8 @@ public class StoppingTime {
     }
 
     public void setStopTimeTo(String stopTimeTo) {
-        LocalTime toTime = LocalTime.parse(stopTimeTo, timeFormatter);
+        if (stopTimeTo == null || stopTimeTo.isEmpty()) return;
 
-        this.stopTimeTo = toTime;
+        this.stopTimeTo = LocalTime.parse(stopTimeTo, timeFormatter);
     }
 }

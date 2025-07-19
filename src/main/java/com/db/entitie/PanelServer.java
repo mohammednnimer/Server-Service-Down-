@@ -37,7 +37,6 @@ public class PanelServer {
     @Column(name = "deleted" )
     private boolean isdeleted=false;
 
-
     public boolean isIsdeleted() {
         return isdeleted;
     }

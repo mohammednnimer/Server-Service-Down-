@@ -1,7 +1,11 @@
 package com.asd.logic.servicedown.services;
 
+import com.asd.enums.CertificateStatus;
 import com.asd.logic.servicedown.models.CertificateStatusModel;
 import com.asd.logic.servicedown.models.ServiceModel;
+import com.asd.repository.ServiceRepo;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -12,7 +16,11 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@ApplicationScoped
 public class CertificateChecker {
+
+    @Inject
+    ServiceRepo serviceRepo;
 
     public CertificateStatusModel checkCertificate(ServiceModel serviceModel) {
 
@@ -55,18 +63,22 @@ public class CertificateChecker {
             statusModel.setDaysUntilExpiry(daysUntilExpiry);
 
             if (daysUntilExpiry <= 0) {
-                statusModel.setStatus("EXPIRED");
+                statusModel.setStatus(CertificateStatus.EXPIRED);
+                serviceRepo.updateCertificate(serviceModel.getServiceUrl(), CertificateStatus.EXPIRED);
                 statusModel.setMessage("The certificate has expired.");
             } else if (daysUntilExpiry <= 2) {
-                statusModel.setStatus("EXPIRING_SOON");
+                statusModel.setStatus(CertificateStatus.EXPIRING_SOON);
+                serviceRepo.updateCertificate(serviceModel.getServiceUrl(), CertificateStatus.EXPIRING_SOON);
                 statusModel.setMessage("The certificate will expire in " + daysUntilExpiry + " days.");
             } else {
-                statusModel.setStatus("VALID");
+                statusModel.setStatus(CertificateStatus.VALID);
+                serviceRepo.updateCertificate(serviceModel.getServiceUrl(), CertificateStatus.VALID);
                 statusModel.setMessage("Certificate is valid for " + daysUntilExpiry + " more days.");
             }
 
         } catch (Exception e) {
-            statusModel.setStatus("ERROR");
+            statusModel.setStatus(CertificateStatus.ERROR);
+            serviceRepo.updateCertificate(serviceModel.getServiceUrl(), CertificateStatus.ERROR);
             statusModel.setMessage("Error checking certificate: " + e.getMessage());
         } finally {
             if (connection != null) {

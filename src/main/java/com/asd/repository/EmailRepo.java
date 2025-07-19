@@ -1,9 +1,6 @@
 package com.asd.repository;
 
 import com.db.entitie.EmailParticipants;
-import com.db.entitie.PanelServer;
-import com.db.entitie.PanelService;
-import com.db.entitie.WhatsappParticipants;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -18,8 +15,7 @@ public class EmailRepo implements PanacheRepository<EmailParticipants> {
         return find("email = ?1", email).firstResult() ;
     }
 
-
-
-
-
+    public List<EmailParticipants> getAllParticipants() {
+        return listAll();
+    }
 }

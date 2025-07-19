@@ -1,11 +1,14 @@
 package com.asd.logic.servicedown.models;
 
 
+import com.asd.enums.CertificateStatus;
+
 import java.util.Date;
 
 public class CertificateStatusModel {
+
     private String serviceName;
-    private String status; // VALID, EXPIRING_SOON, EXPIRED, ERROR
+    private CertificateStatus status; // VALID, EXPIRING_SOON, EXPIRED, ERROR
     private long daysUntilExpiry;
     private Date expirationDate;
     private String message;
@@ -28,10 +31,10 @@ public class CertificateStatusModel {
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
-    public String getStatus() {
+    public CertificateStatus getStatus() {
         return status;
     }
-    public void setStatus(String status) {
+    public void setStatus(CertificateStatus status) {
         this.status = status;
     }
     public long getDaysUntilExpiry() {

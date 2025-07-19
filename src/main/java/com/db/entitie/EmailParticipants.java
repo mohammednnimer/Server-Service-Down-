@@ -10,8 +10,6 @@ import jakarta.persistence.Table;
 @Table(name = "EmailParticipants")
 public class EmailParticipants {
 
-
-
     @Id
     @Column(name = "email")
     private String email;

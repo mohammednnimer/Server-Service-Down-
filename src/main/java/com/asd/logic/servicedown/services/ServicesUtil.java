@@ -2,25 +2,28 @@ package com.asd.logic.servicedown.services;
 
 import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.StoppingTime;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public abstract  class ServicesUtil {
-    private static StoppingTime stoppingTime;
-    private  static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+@ApplicationScoped
+public  class ServicesUtil {
 
+    @Inject
+    Loaders loaders;
 
-    static {
-        try {
-            stoppingTime = Loaders.loadIntervalTime();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    private StoppingTime stoppingTime;
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+    @PostConstruct
+    void init() {
+        stoppingTime = loaders.loadIntervalTime();
     }
 
-public  static boolean withIntervalStopTime() {
+public boolean withIntervalStopTime() {
 
     LocalTime currentTime = LocalTime.now();
     String currentTimeStr = currentTime.format(timeFormatter);
