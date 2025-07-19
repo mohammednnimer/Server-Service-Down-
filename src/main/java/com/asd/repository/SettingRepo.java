@@ -5,6 +5,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalTime;
+
 @ApplicationScoped
 public class SettingRepo implements PanacheRepository<GeneralSettings> {
 

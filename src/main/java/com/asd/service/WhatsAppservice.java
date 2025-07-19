@@ -8,6 +8,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 @ApplicationScoped
 public class WhatsAppservice {
     @Inject
@@ -27,4 +29,7 @@ public class WhatsAppservice {
         return count > 0;
     }
 
+    public List<WhatsappParticipants> getAllParticipants() {
+        return whatsappRepo.getAllParticipants();
+    }
 }

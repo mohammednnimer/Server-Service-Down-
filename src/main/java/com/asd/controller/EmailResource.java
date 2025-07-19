@@ -2,6 +2,7 @@ package com.asd.controller;
 
 
 import com.asd.service.EmailService;
+import com.asd.service.SettingService;
 import com.db.entitie.EmailParticipants;
 import com.utils.constant.ErrorMsgs;
 import com.utils.constant.SuccMsgs;
@@ -20,6 +21,8 @@ public class EmailResource {
     @Inject
     EmailService emailService;
 
+    @Inject
+    SettingService settingService;
 
     @POST
     @Path(SystemPaths.add)
@@ -48,16 +51,15 @@ public class EmailResource {
         }
     }
 
+    @Path("/participants")
+    @GET
+    public Response getParticipants() {
+        return Response.status(Response.Status.OK).entity(emailService.getAllParticipants()).build();
+    }
 
-
-
-
-
-
-
-
-
-
-
+    @GET
+    public Response getEmailSettings() {
+        return Response.status(Response.Status.OK).entity(settingService.getEmailSettings()).build();
+    }
 
 }

@@ -74,15 +74,6 @@ public class ServiceResource {
         return ServicePanel.GetServiceById(id);
     }
 
-
-
-
-
-
-
-
-
-
 }
 
 

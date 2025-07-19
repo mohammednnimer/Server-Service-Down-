@@ -5,6 +5,9 @@ import com.db.entitie.EmailParticipants;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
+
 @ApplicationScoped
 public class EmailService {
 
@@ -25,6 +28,10 @@ public class EmailService {
     public boolean deleteEmail(String email){
       long count= emailRepo.deleteEmail(email);
       return count > 0;
+    }
+
+    public List<EmailParticipants> getAllParticipants(){
+        return emailRepo.getAllParticipants();
     }
 
 }

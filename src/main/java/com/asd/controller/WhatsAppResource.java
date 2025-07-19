@@ -1,5 +1,6 @@
 package com.asd.controller;
 
+import com.asd.service.SettingService;
 import com.asd.service.WhatsAppservice;
 import com.db.entitie.EmailParticipants;
 import com.db.entitie.WhatsappParticipants;
@@ -11,6 +12,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path(SystemPaths.whatsApp)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -20,6 +23,8 @@ public class WhatsAppResource {
     @Inject
     WhatsAppservice whatsAppservice;
 
+    @Inject
+    SettingService settingService;
 
     @POST
     @Path(SystemPaths.add)
@@ -43,9 +48,18 @@ public class WhatsAppResource {
 
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(new com.db.entitie.Response(Response.Status.NOT_FOUND, ErrorMsgs.NotFound)).build();
-
         }
     }
 
+    @Path("/participants")
+    @GET
+    public Response getParticipants() {
+        return Response.status(Response.Status.OK).entity(whatsAppservice.getAllParticipants()).build();
+    }
+
+    @GET
+    public Response getWhatsappSettings() {
+        return Response.status(Response.Status.OK).entity(settingService.getWhatsappSettings()).build();
+    }
 
 }
