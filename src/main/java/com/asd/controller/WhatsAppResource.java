@@ -27,7 +27,6 @@ public class WhatsAppResource {
     SettingService settingService;
 
     @POST
-    @Path(SystemPaths.add)
     public Response addPhone(WhatsappParticipants phoneParticipants){
          if( !whatsAppservice.addPhone(phoneParticipants))
         {
@@ -37,7 +36,7 @@ public class WhatsAppResource {
     }
 
     @DELETE
-    @Path(SystemPaths.DELETE+"/{phone}")
+    @Path("/{phone}")
     public Response deletePhone(@PathParam("phone") String phone)
     {
         if(whatsAppservice.deletephone(phone))

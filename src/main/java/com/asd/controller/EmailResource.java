@@ -25,7 +25,6 @@ public class EmailResource {
     SettingService settingService;
 
     @POST
-    @Path(SystemPaths.add)
     public Response addEmail(EmailParticipants emailParticipants){
        if(!emailService.addEmail(emailParticipants))
        {
@@ -36,7 +35,7 @@ public class EmailResource {
     }
 
     @DELETE
-    @Path(SystemPaths.DELETE+"/{email}")
+    @Path("/{email}")
     public Response deleteEmail(@PathParam("email") String email)
     {
         if(emailService.deleteEmail(email))
