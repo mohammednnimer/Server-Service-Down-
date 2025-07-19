@@ -1,6 +1,7 @@
 package com.asd.logic.servicedown.controller;
 
 import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
 import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.CertificateStatusModel;
 import com.asd.logic.servicedown.models.ServiceModel;
@@ -52,11 +53,13 @@ public class ControllerManager {
         for (ServiceModel serviceModel : serviceModelList) {
             try {
                 boolean status = websiteChecker.isWebsiteUp(serviceModel);
+                serviceRepo.updateServiceStatus(serviceModel.getServiceUrl(), ServiceStatus.DOWN);
                 if (!status) {
                     if (!servicesUtil.withIntervalStopTime() && !serviceModel.getIsBlocked()) {
                         notificationServices.sendWhatsAppMsg(serviceModel);
-
                     }
+                } else {
+                    serviceRepo.updateServiceStatus(serviceModel.getServiceUrl(), ServiceStatus.UP);
                 }
 
                 if (serviceModel.getHttps()) {

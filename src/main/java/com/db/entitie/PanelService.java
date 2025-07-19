@@ -49,6 +49,7 @@ public class PanelService {
     @Column(name = "certificate_status")
     private CertificateStatus certificateStatus;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "service_status")
     private ServiceStatus serviceStatus;
 

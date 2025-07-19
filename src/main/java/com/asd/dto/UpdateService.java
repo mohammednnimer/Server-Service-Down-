@@ -10,6 +10,7 @@ public class UpdateService {
         private String serviceName;
         private Integer servicePort;
         private String updatedBy;
+        private boolean isBlocked;
 
     public String getWorkDirPath() {
         return workDirPath;
@@ -61,5 +62,13 @@ public class UpdateService {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean isBlocked) {
+        this.isBlocked = isBlocked;
     }
 }

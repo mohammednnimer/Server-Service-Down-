@@ -1,6 +1,7 @@
 package com.asd.repository;
 
 import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
 import com.db.entitie.PanelService;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -61,6 +62,12 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
     @Transactional
     public void updateCertificate(String url, CertificateStatus status) {
         update("certificateStatus = :status where serviceName = :name",
+                Parameters.with("status", status).and("name", url));
+    }
+
+    @Transactional
+    public void updateServiceStatus(String url, ServiceStatus status) {
+        update("serviceStatus = :status where serviceName = :name",
                 Parameters.with("status", status).and("name", url));
     }
 

@@ -106,6 +106,9 @@ public class ServicePanel {
         if (updatedService.getUpdatedBy() != null) {
             existingService.setUpdatedBy(updatedService.getUpdatedBy());
         }
+        if (updatedService.isBlocked()) {
+            existingService.setBlocked(updatedService.isBlocked());
+        }
         existingService.setUpdatedDate(LocalDateTime.now());
         return true;
     }
