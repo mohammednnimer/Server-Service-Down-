@@ -1,11 +1,12 @@
 package com.asd.logic.servicedown.models;
 
-import java.util.List;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class WhatsAppConfigModel {
-    private String url ;
-    private List<String> mobiles ;
 
+    private String url ;
 
     public String getUrl() {
         return url;
@@ -13,13 +14,5 @@ public class WhatsAppConfigModel {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public List<String> getMobiles() {
-        return mobiles;
-    }
-
-    public void setMobiles(List<String> mobiles) {
-        this.mobiles = mobiles;
     }
 }

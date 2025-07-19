@@ -7,6 +7,7 @@ import com.asd.repository.SettingRepo;
 import com.asd.repository.WhatsappRepo;
 import com.db.entitie.GeneralSettings;
 import com.db.entitie.PanelService;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -28,18 +29,12 @@ public class Loaders {
     @Inject
     WhatsappRepo whatsappRepo;
 
-private WhatsAppConfigModel whatsAppConfigModel =  null ;
-    public  WhatsAppConfigModel loadWhatsAppConfig() {
-        if (whatsAppConfigModel == null) {
-            whatsAppConfigModel = loadWhatsAppConfigUtil() ;
-            return  whatsAppConfigModel ;
-        }
-        return  whatsAppConfigModel ;
-    }
+    @Inject
+    WhatsAppConfigModel whatsAppConfigModel;
 
-    private WhatsAppConfigModel loadWhatsAppConfigUtil() {
+    public WhatsAppConfigModel loadWhatsAppConfigUtil() {
         GeneralSettings url = settingRepo.getSetting("whatsapp_url");
-        WhatsAppConfigModel whatsAppConfigModel = new WhatsAppConfigModel();
+        System.out.println(url.getSettingValue() + "!!!!!");
         whatsAppConfigModel.setUrl(url.getSettingValue());
 
         return null ;

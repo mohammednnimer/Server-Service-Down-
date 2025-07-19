@@ -31,12 +31,8 @@ public class NotificationServices {
     @Inject
     WhatsappRepo whatsappRepo;
 
-    private WhatsAppConfigModel whatsAppConfigModel;
-
-    @PostConstruct
-    void init() {
-        this.whatsAppConfigModel = loaders.loadWhatsAppConfig();
-    }
+    @Inject
+    WhatsAppConfigModel whatsAppConfigModel;
 
     public boolean sendWhatsAppMsg(ServiceModel serviceModel) {
 

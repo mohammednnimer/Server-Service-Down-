@@ -35,6 +35,8 @@ public class ControllerManager {
 
     public void mainFun() {
         List<ServiceModel> serviceModelList = new LinkedList<>();
+        loaders.loadWhatsAppConfigUtil();
+
         try {
             System.out.println("Starting Loading Services from File ... ");
             serviceModelList = loaders.loadServices();
