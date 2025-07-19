@@ -45,7 +45,13 @@ public class ServicePanel {
         return serviceRepo.getAllServices(limit,page);
     }
 
+    public boolean exists(String ip, int port) {
+        return serviceRepo.find("serviceName = ?1 and servicePort = ?2", ip, port).firstResult() != null;
+    }
 
+    public boolean exists(int port) {
+        return serviceRepo.find("servicePort = ?2").firstResult() != null;
+    }
 
     public List<PanelService> GetServiesByIdServer(String id)
     {
@@ -56,9 +62,12 @@ public class ServicePanel {
     public boolean Create(PanelService service) {
 
         if(serverRepo.getServer(service.getServer())==null){
-
             return false;
         }
+
+        if (exists(service.getServicePort())) return false;
+        if (exists(service.getServiceName(), service.getServicePort())) return false;
+
         service.setId(UUID.randomUUID().toString());
         service.setCreationDate(LocalDateTime.now());
         service.setIsDeleted(false);

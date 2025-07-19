@@ -17,7 +17,6 @@ public class PanelService {
     @Column(name = "ID")
     private String id;
 
-
     @Column(name = "ServerID", nullable = false)
     private String server;
 
