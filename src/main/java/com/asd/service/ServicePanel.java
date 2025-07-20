@@ -3,6 +3,8 @@ package com.asd.service;
 
 import com.asd.dto.SearchCriteria;
 import com.asd.dto.UpdateService;
+import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
 import com.asd.repository.ServerRepo;
 import com.asd.repository.ServiceRepo;
 import com.db.entitie.PanelServer;
@@ -14,7 +16,9 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,7 +54,7 @@ public class ServicePanel {
     }
 
     public boolean exists(int port) {
-        return serviceRepo.find("servicePort = ?2").firstResult() != null;
+        return serviceRepo.find("servicePort = ?1", port).firstResult() != null;
     }
 
     public List<PanelService> GetServiesByIdServer(String id)
@@ -71,6 +75,8 @@ public class ServicePanel {
         service.setId(UUID.randomUUID().toString());
         service.setCreationDate(LocalDateTime.now());
         service.setIsDeleted(false);
+        service.setServiceStatus(ServiceStatus.LOADING);
+        service.setCertificateStatus(CertificateStatus.LOADING);
         serviceRepo.persist(service);
         return true;
     }
@@ -91,7 +97,6 @@ public class ServicePanel {
             return true;
         }
     }
-
 
     @Transactional
     public boolean update(UpdateService updatedService) {
@@ -122,7 +127,6 @@ public class ServicePanel {
         return true;
     }
 
-
     public List<PanelService> GetFilter(SearchCriteria filtering) {
         return  serviceRepo.search(filtering.getDNS(),filtering.getPORT(), filtering.getGernalSearch());
     }
@@ -136,10 +140,6 @@ public class ServicePanel {
 
 
     }
-
-
-
-
 
     public Response GetService(Integer limit,Integer page) {
             if (limit == null) limit = 50;
@@ -160,9 +160,6 @@ public class ServicePanel {
                     .build();
         }
 
-
-
-
     public Response UpdateService(UpdateService service) {
         boolean isSucc = update(service);
         if (isSucc) {
@@ -181,9 +178,5 @@ public class ServicePanel {
         }
         return Response.ok(GetPanelServiceById(id)).build();
     }
-
-
-
-
 
 }

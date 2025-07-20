@@ -52,9 +52,6 @@ public class ServerResource {
 
         return Response.status(Response.Status.NOT_ACCEPTABLE).entity(
                 new com.db.entitie.Response(Response.Status.NOT_ACCEPTABLE,"There is a server with the same IP And DNS ")).build();
-
-
-
     }
 
     @DELETE

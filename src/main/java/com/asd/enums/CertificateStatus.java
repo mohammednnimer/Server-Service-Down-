@@ -5,5 +5,6 @@ public enum CertificateStatus {
     EXPIRING_SOON,
     EXPIRED,
     ERROR,
-    NONE;
+    NONE,
+    LOADING;
 }

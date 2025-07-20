@@ -24,12 +24,11 @@ public  class ServicesUtil {
     }
 
 public boolean withIntervalStopTime() {
-
     LocalTime currentTime = LocalTime.now();
     String currentTimeStr = currentTime.format(timeFormatter);
     LocalTime formattedCurrentTime = LocalTime.parse(currentTimeStr, timeFormatter);
 
-
+    if (stoppingTime.getStopTimeFrom() == null || stoppingTime.getStopTimeTo() == null) return false;
     if (!formattedCurrentTime.isBefore(stoppingTime.getStopTimeFrom()) && !formattedCurrentTime.isAfter(stoppingTime.getStopTimeTo())) {
         System.out.println("The current time is within the interval.");
         return true ;

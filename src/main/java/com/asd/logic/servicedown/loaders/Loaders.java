@@ -1,5 +1,7 @@
 package com.asd.logic.servicedown.loaders;
 
+import com.asd.enums.CertificateStatus;
+import com.asd.enums.ServiceStatus;
 import com.asd.logic.servicedown.models.*;
 import com.asd.repository.EmailRepo;
 import com.asd.repository.ServiceRepo;
@@ -54,6 +56,10 @@ public class Loaders {
                 serviceModels.add(serviceModel) ;
             }
             else {
+                service.setCertificateStatus(CertificateStatus.ERROR);
+                service.setServiceStatus(ServiceStatus.DOWN);
+                serviceRepo.updateServiceStatus(service.getServiceName(), service.getServiceStatus());
+                serviceRepo.updateCertificate(service.getServiceName(), service.getCertificateStatus());
                 System.err.println("Error while converting PanelService into Server Model: " +
                         "Http protocol couldn't be found within the URL: "  + service.getServiceName());
             }
