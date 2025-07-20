@@ -61,14 +61,14 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
 
     @Transactional
     public void updateCertificate(String url, CertificateStatus status) {
-        update("certificateStatus = :status where serviceName = :name",
-                Parameters.with("status", status).and("name", url));
+        update("certificateStatus = :status where serviceDns = :dns",
+                Parameters.with("status", status).and("dns", url));
     }
 
     @Transactional
     public void updateServiceStatus(String url, ServiceStatus status) {
-        update("serviceStatus = :status where serviceName = :name",
-                Parameters.with("status", status).and("name", url));
+        update("serviceStatus = :status where serviceDns = :dns",
+                Parameters.with("status", status).and("dns", url));
     }
 
     public List<PanelService> search(String dns, Integer port, String generalSearch) {

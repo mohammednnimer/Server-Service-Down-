@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 public class ServiceModel {
 
     private String serviceUrl ;
-    private Boolean isBlocked = false;
-    private Boolean isHttps;
+    private boolean isBlocked = false;
+    private boolean isHttps;
     private LocalDateTime lastShutdown;
     private CertificateStatus certificateStatus;
     private ServiceStatus serviceStatus;
 
-    public Boolean getBlocked() {
+    public boolean getBlocked() {
         return isBlocked;
     }
 
@@ -23,11 +23,11 @@ public class ServiceModel {
         isBlocked = blocked;
     }
 
-    public Boolean getHttps() {
+    public boolean getHttps() {
         return isHttps;
     }
 
-    public void setHttps(Boolean https) {
+    public void setHttps(boolean https) {
         isHttps = https;
     }
 

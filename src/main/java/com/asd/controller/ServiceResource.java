@@ -74,6 +74,12 @@ public class ServiceResource {
         return ServicePanel.GetServiceById(id);
     }
 
+    @GET
+    @Path("check")
+    public Response checkNow() {
+        checkerBean.check();
+        return Response.ok().build();
+    }
 }
 
 

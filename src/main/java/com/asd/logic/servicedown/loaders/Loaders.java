@@ -45,10 +45,10 @@ public class Loaders {
     public List<ServiceModel> loadServices() {
         List<ServiceModel> serviceModels = new LinkedList<>();
         for (PanelService service : serviceRepo.getAllServices(-1, -1)) {
-            if (service.getServiceName().startsWith("http://") || service.getServiceName().startsWith("https://") ){
+            if (service.getServiceDns().startsWith("http://") || service.getServiceDns().startsWith("https://") ){
                 ServiceModel serviceModel = new ServiceModel() ;
 
-                serviceModel.setServiceUrl(service.getServiceName());
+                serviceModel.setServiceUrl(service.getServiceDns());
                 serviceModel.setIsBlocked(service.isBlocked());
                 serviceModel.setServiceStatus(service.getServiceStatus());
                 serviceModel.setCertificateStatus(service.getCertificateStatus());
@@ -58,10 +58,10 @@ public class Loaders {
             else {
                 service.setCertificateStatus(CertificateStatus.ERROR);
                 service.setServiceStatus(ServiceStatus.DOWN);
-                serviceRepo.updateServiceStatus(service.getServiceName(), service.getServiceStatus());
-                serviceRepo.updateCertificate(service.getServiceName(), service.getCertificateStatus());
+                serviceRepo.updateServiceStatus(service.getServiceDns(), service.getServiceStatus());
+                serviceRepo.updateCertificate(service.getServiceDns(), service.getCertificateStatus());
                 System.err.println("Error while converting PanelService into Server Model: " +
-                        "Http protocol couldn't be found within the URL: "  + service.getServiceName());
+                        "Http protocol couldn't be found within the URL: "  + service.getServiceDns());
             }
 
         }

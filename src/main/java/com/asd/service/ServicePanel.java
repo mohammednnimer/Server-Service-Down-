@@ -50,7 +50,7 @@ public class ServicePanel {
     }
 
     public boolean exists(String ip, int port) {
-        return serviceRepo.find("serviceName = ?1 and servicePort = ?2", ip, port).firstResult() != null;
+        return serviceRepo.find("serviceDns = ?1 and servicePort = ?2", ip, port).firstResult() != null;
     }
 
     public boolean exists(int port) {
@@ -70,7 +70,7 @@ public class ServicePanel {
         }
 
         if (exists(service.getServicePort())) return false;
-        if (exists(service.getServiceName(), service.getServicePort())) return false;
+        if (exists(service.getServiceDns(), service.getServicePort())) return false;
 
         service.setId(UUID.randomUUID().toString());
         service.setCreationDate(LocalDateTime.now());
