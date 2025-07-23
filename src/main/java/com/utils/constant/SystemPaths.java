@@ -16,6 +16,7 @@ public interface SystemPaths {
     String Email="/settings/email";
     String whatsApp="/settings/whatsapp";
     String add="/add";
+    String alert="/alert";
 
     String exist="Object already exist";
 

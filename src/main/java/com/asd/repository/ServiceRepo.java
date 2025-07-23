@@ -105,14 +105,4 @@ public class ServiceRepo  implements PanacheRepository<PanelService> {
 
         return list(query);
     }
-
-
-
-
-
-
-
-
-
-
 }
