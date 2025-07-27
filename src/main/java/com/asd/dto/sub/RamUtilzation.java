@@ -19,6 +19,16 @@ public class RamUtilzation {
         this.total = total;
     }
 
+    @Override
+    public String toString() {
+        return "RamUtilzation{" +
+                "free=" + free +
+                ", total=" + total +
+                ", used=" + used +
+                ", utilization=" + utilization +
+                '}';
+    }
+
     public RamUtilzation(long free, long total, long used, double utilization) {
         this.free = free;
         this.total = total;

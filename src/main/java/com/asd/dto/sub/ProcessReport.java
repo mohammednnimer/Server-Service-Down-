@@ -7,15 +7,14 @@ public class ProcessReport {
     private int port;
     private String cpuUsage;
     private String memoryUsage;
-
     private String startTime;
-    private String matchedBy;
+    private String processPath;
 
     public ProcessReport() {
     }
 
     public ProcessReport(String processName, long pid, int port, String cpuUsage, String memoryUsage,
-                         String startTime, String matchedBy) {
+                         String startTime, String processPath) {
         this.processName = processName;
         this.pid = pid;
         this.port = port;
@@ -23,7 +22,7 @@ public class ProcessReport {
         this.memoryUsage = memoryUsage;
 
         this.startTime = startTime;
-        this.matchedBy = matchedBy;
+        this.processPath = processPath;
     }
 
     public String getProcessName() {
@@ -76,12 +75,12 @@ public class ProcessReport {
         this.startTime = startTime;
     }
 
-    public String getMatchedBy() {
-        return matchedBy;
+    public String getProcessPath() {
+        return processPath;
     }
 
-    public void setMatchedBy(String matchedBy) {
-        this.matchedBy = matchedBy;
+    public void setProcessPath(String processPath) {
+        this.processPath = processPath;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class ProcessReport {
                 ", cpuUsage='" + cpuUsage + '\'' +
                 ", memoryUsage='" + memoryUsage + '\'' +
                 ", startTime='" + startTime + '\'' +
-                ", matchedBy='" + matchedBy + '\'' +
+                ", processPath='" + processPath + '\'' +
                 '}';
     }
 }

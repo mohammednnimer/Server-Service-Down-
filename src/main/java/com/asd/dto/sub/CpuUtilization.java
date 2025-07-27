@@ -11,7 +11,14 @@ public class CpuUtilization {
         return utilization;
     }
 
-
+    @Override
+    public String toString() {
+        return "CpuUtilization{" +
+                "utilization=" + utilization +
+                ", physicalCores=" + physicalCores +
+                ", logicalCores=" + logicalCores +
+                '}';
+    }
 
     public CpuUtilization() {
     }

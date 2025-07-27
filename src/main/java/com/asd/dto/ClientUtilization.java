@@ -41,6 +41,14 @@ public class ClientUtilization {
         this.ramUtilzation = ramUtilzation;
     }
 
+    @Override
+    public String toString() {
+        return "ClientUtilization{" +
+                "cpuUtilzation=" + cpuUtilzation +
+                ", harddiskUtilization=" + harddiskUtilization +
+                ", ramUtilzation=" + ramUtilzation +
+                '}';
+    }
 
     public RamUtilzation getRamUtilzation() {
         return ramUtilzation;

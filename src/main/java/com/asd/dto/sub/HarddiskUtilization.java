@@ -18,6 +18,12 @@ public class HarddiskUtilization {
     }
 
 
+    @Override
+    public String toString() {
+        return "HarddiskUtilization{" +
+                "partitions=" + partitions +
+                '}';
+    }
 
     public void getAllPartitionsInfo() {
         List<PartitionInfo> partitions = new ArrayList<>();
