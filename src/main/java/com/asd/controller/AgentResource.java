@@ -2,6 +2,7 @@ package com.asd.controller;
 
 
 import com.asd.dto.AgentDto;
+import com.asd.dto.Token;
 import com.asd.service.AgentService;
 import com.db.entitie.Agent;
 import jakarta.inject.Inject;
@@ -40,6 +41,23 @@ public class AgentResource {
      @POST
     public Response createAgent(Agent agent) {
         return agentService.createAgent(agent);
+    }
+
+
+
+    @GET
+    @Path("get-token/{id}")
+    public Response getToken(@PathParam("id") String id )
+    {
+       String token= agentService.getToken(id);
+        if(token!=null)
+        {
+            return Response.ok().entity(new Token(token)).build();
+        }
+
+
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+
     }
 
 

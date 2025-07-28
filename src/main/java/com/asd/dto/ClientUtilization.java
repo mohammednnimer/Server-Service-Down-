@@ -19,6 +19,15 @@ public class ClientUtilization {
     private CpuUtilization cpuUtilzation;
     private HarddiskUtilization harddiskUtilization;
     private RamUtilzation ramUtilzation;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public CpuUtilization getCpuUtilzation() {
         return cpuUtilzation;

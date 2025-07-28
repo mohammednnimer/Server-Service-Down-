@@ -9,7 +9,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class AgentRepo implements PanacheRepository<Agent> {
 
 
-
+    public Agent findByServerId(String id) {
+        return find("server = ?1", id).firstResult();
+    }
 
     public Agent findByToken(String token) {
         return find("token = ?1", token).firstResult();

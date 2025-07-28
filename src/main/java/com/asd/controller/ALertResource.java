@@ -38,7 +38,9 @@ public class ALertResource {
           //  notificationService.SendEmail(clientIp, reciveAlert);
             lastReceived = System.currentTimeMillis();
         }
-        System.out.println(reciveAlert.toString());
+
+        System.out.println(clientIp +"        ");
+     //   System.out.println(reciveAlert.toString());
     }
 
 

@@ -25,6 +25,14 @@ public class AgentService {
         return agentRepo.findByToken(token);
     }
 
+    public String getToken(String id)
+    {
+        return agentRepo.findByServerId(id).getServer();
+
+    }
+
+
+
     @Transactional
     public Response createAgent(Agent agent) {
         if (agent.getToken() == null || agent.getToken().isBlank()) {

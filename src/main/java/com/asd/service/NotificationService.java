@@ -133,8 +133,8 @@ public class NotificationService {
             emailNotification.setHarddiskUtilization(harddisk);
             emailNotification.setCpuUtilization(cpuUtil);
             emailNotification.setRamUtilization(ramUtil);
-
             sendEmail(emailNotification);
+
         }
     }
 }
