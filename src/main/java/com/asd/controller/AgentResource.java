@@ -1,6 +1,7 @@
 package com.asd.controller;
 
 
+import com.asd.dto.AgentDto;
 import com.asd.service.AgentService;
 import com.db.entitie.Agent;
 import jakarta.inject.Inject;
@@ -27,10 +28,12 @@ public class AgentResource {
     @Path("/{token}")
     public Response getAgentByToken(@PathParam("token") String token) {
         Agent agent = agentService.getAgentByToken(token);
+
         if (agent == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Agent not found").build();
         }
+        System.out.println(agent.getKeywords().get(0));
         return Response.ok(agent).build();
     }
 
@@ -39,9 +42,14 @@ public class AgentResource {
         return agentService.createAgent(agent);
     }
 
+
+
+
+
+
     @PUT
     @Path("/{token}")
-    public Response updateAgent(@PathParam("token") String token, Agent updatedAgent) {
+    public Response updateAgent(@PathParam("token") String token, AgentDto updatedAgent) {
         return agentService.updateAgent(token, updatedAgent);
     }
 

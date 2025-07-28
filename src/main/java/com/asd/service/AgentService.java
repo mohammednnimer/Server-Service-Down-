@@ -1,5 +1,6 @@
 package com.asd.service;
 
+import com.asd.dto.AgentDto;
 import com.asd.repository.AgentRepo;
 import com.db.entitie.Agent;
 import com.utils.functions.ASDKey;
@@ -29,7 +30,6 @@ public class AgentService {
         if (agent.getToken() == null || agent.getToken().isBlank()) {
             agent.setToken(ASDKey.generate4096BitKey(agent.getToken()));
         }
-
         if (agentRepo.existsByToken(agent.getToken())) {
             return Response.status(Response.Status.CONFLICT)
                     .entity("Agent with same token already exists.").build();
@@ -39,13 +39,11 @@ public class AgentService {
     }
 
     @Transactional
-    public Response updateAgent(String token, Agent updatedAgent) {
+    public Response updateAgent(String token, AgentDto updatedAgent) {
         Agent existing = agentRepo.findByToken(token);
         if (existing == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Agent not found.").build();
         }
-
-
         if (updatedAgent.getKeywords() != null) {
             existing.setKeywords(updatedAgent.getKeywords());
         }

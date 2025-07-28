@@ -25,19 +25,29 @@ public class Agent {
         this.manager_ip = manager_ip;
     }
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "agent_keywords", joinColumns = @JoinColumn(name = "agent_token"))
     @Column(name = "keyword")
     private List<String> keywords;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "agent_ports", joinColumns = @JoinColumn(name = "agent_token"))
     private List<Ports> ports;
+
+    @Column(name = "server_id")
+    private String server;
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
 
     public String getToken() {
         return token;
     }
-
     public void setToken(String token) {
         this.token = token;
     }
