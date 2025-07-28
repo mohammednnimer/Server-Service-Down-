@@ -1,0 +1,24 @@
+package com.asd.repository;
+
+import com.db.entitie.Agent;
+import com.db.entitie.EmailParticipants;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class AgentRepo implements PanacheRepository<Agent> {
+
+
+
+
+    public Agent findByToken(String token) {
+        return find("token = ?1", token).firstResult();
+    }
+
+
+    public boolean existsByToken(String token) {
+        return count("token = ?1", token) > 0;
+    }
+
+
+}

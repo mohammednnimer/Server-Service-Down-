@@ -32,7 +32,7 @@ public class ALertResource {
     @POST
     public void  receiveAlert( ReciveAlert reciveAlert) {
         String clientIp = routingContext.request().remoteAddress().host();
-        notificationService.SendEmail(clientIp,reciveAlert);
+     //   notificationService.SendEmail(clientIp,reciveAlert);
         System.out.println(reciveAlert.toString());
     }
 

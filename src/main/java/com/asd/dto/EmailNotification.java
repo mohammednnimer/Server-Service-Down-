@@ -1,16 +1,23 @@
 package com.asd.dto;
 
+import com.asd.dto.sub.HarddiskUsage;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class EmailNotification {
     private String message;
     private String clientIp;
     private double cpuUtilization;
     private double ramUtilization;
-    private double harddiskUtilization;
+    private List<HarddiskUsage> harddiskUtilization=new ArrayList<>();
+
+
 
     public EmailNotification() {
     }
 
-    public EmailNotification(String message, String clientIp, double cpuUtilization, double ramUtilization, double harddiskUtilization) {
+    public EmailNotification(String message, String clientIp, double cpuUtilization, double ramUtilization, List<HarddiskUsage> harddiskUtilization) {
         this.message = message;
         this.clientIp = clientIp;
         this.cpuUtilization = cpuUtilization;
@@ -46,39 +53,18 @@ public class EmailNotification {
         return ramUtilization;
     }
 
+    public List<HarddiskUsage> getHarddiskUtilization() {
+        return harddiskUtilization;
+    }
+
+    public void setHarddiskUtilization(List<HarddiskUsage> harddiskUtilization) {
+        this.harddiskUtilization = harddiskUtilization;
+    }
+
     public void setRamUtilization(double ramUtilization) {
         this.ramUtilization = ramUtilization;
     }
 
-    public double getHarddiskUtilization() {
-        return harddiskUtilization;
-    }
 
-    public void setHarddiskUtilization(double harddiskUtilization) {
-        this.harddiskUtilization = harddiskUtilization;
-    }
 
-    public void generateAlertMessage() {
-        StringBuilder alert = new StringBuilder("Alert on client IP: " + clientIp + "\n");
-
-        boolean hasIssue = false;
-
-        if (cpuUtilization > 150) {
-            alert.append("- High CPU usage: ").append(cpuUtilization).append("%\n");
-            hasIssue = true;
-        }
-        if (ramUtilization > 90) {
-            alert.append("- High RAM usage: ").append(ramUtilization).append("%\n");
-            hasIssue = true;
-        }
-        if (harddiskUtilization > 85) {
-            alert.append("- High Hard Disk usage: ").append(harddiskUtilization).append("%\n");
-            hasIssue = true;
-        }
-        if (!hasIssue) {
-            alert.append("No critical issues detected.");
-        }
-
-        this.message = alert.toString();
-    }
 }

@@ -2,17 +2,21 @@ package com.asd.service;
 
 import com.asd.dto.EmailNotification;
 import com.asd.dto.ReciveAlert;
+import com.asd.dto.sub.HarddiskUsage;
 import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.EmailConfigModel;
 import com.asd.repository.EmailRepo;
 import com.db.entitie.EmailParticipants;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -59,22 +63,21 @@ public class NotificationService {
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient.getEmail().trim()));
             }
 
-            message.setSubject("System Alert Notification from " + notification.getClientIp());
 
+            message.setSubject("System Alert Notification from " + notification.getClientIp());
             String emailBody = "<html><body>" +
                     "<h2>Alert Notification</h2>" +
                     "<p><b>Client IP:</b> " + notification.getClientIp() + "</p>" +
                     "<p><b>CPU Utilization:</b> " + notification.getCpuUtilization() + "%</p>" +
-                    "<p><b>RAM Utilization:</b> " + notification.getRamUtilization() + "%</p>" +
-                    "<p><b>Hard Disk Utilization:</b> " + notification.getHarddiskUtilization() + "%</p>" +
-                    "<pre>" + notification.getMessage() + "</pre>" +
-                    "</body></html>";
-
+                    "<p><b>RAM Utilization:</b> " + notification.getRamUtilization() + "%</p>";
+                  for(int i=0;i<notification.getHarddiskUtilization().size();i++)
+                  {
+                      emailBody += "<p><b>Hard Disk Utilization:</b> " + notification.getHarddiskUtilization() + "%</p>" ;
+                  }
+            emailBody+=    "<pre>" + notification.getMessage() + "</pre>" +"</body></html>";
             message.setContent(emailBody, "text/html; charset=utf-8");
-
             Transport.send(message);
             System.out.println("Alert email sent for client IP: " + notification.getClientIp());
-
         } catch (MessagingException e) {
             System.err.println("Failed to send alert email: " + e.getMessage());
         }
@@ -87,14 +90,17 @@ public class NotificationService {
        double cpuUtil = reciveAlert.getClientUtilization().getCpuUtilzation().getUtilization();
         double ramUtil = reciveAlert.getClientUtilization().getRamUtilzation().getUtilization();
 
-        double harddisk=0;
+
+
+        List<HarddiskUsage> harddisk=new ArrayList<>();
         for(int i=0;i<reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().size();i++)
         {
             if(reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().get(i).getUtilization()>85)
             {
 
-                harddisk=reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().get(i).getUtilization();
-            }
+
+                harddisk.add(new HarddiskUsage(reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().get(i).getPath(),reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().get(i).getUtilization()));
+             }
 
 
         }
@@ -103,20 +109,24 @@ public class NotificationService {
 
         if (cpuUtil > 150) {
             alertNeeded = true;
-            alertMsg.append("CPU usage is high: ").append(cpuUtil).append("%\n");
+            alertMsg.append("CPU usage is high: ").append(String.format("%.2f", cpuUtil)).append("%\n");
 
         }
         if (ramUtil > 90) {
             alertNeeded = true;
-            alertMsg.append("RAM usage is high: ").append(ramUtil).append("%\n");
+            alertMsg.append("RAM usage is high: ").append(String.format("%.2f", ramUtil)).append("%\n");
         }
-        if (harddisk>85)
-        {alertNeeded = true;
-            alertMsg.append("harddisk usage is high: ").append(harddisk).append("%\n");
+        if (harddisk.size()>0)
+        {
+            alertNeeded = true;
+         for (int i=0;i<harddisk.size();i++)
+         {
+             alertMsg.append("Hard disk ("+harddisk.get(i).getName()+") usage is high: ").append(String.format("%.2f", harddisk.get(i).getHarddiskUtilization())).append("%\n");
+
+         }
         }
 
         if (alertNeeded) {
-
             emailNotification.setClientIp(ip);
             emailNotification.setMessage(alertMsg.toString());
           emailNotification.setHarddiskUtilization(harddisk);
