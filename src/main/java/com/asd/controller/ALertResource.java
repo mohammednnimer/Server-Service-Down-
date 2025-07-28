@@ -29,10 +29,16 @@ public class ALertResource {
     @Inject
     NotificationService notificationService;
 
+    private long lastReceived;
+    private final int IGNORE_DURATION = 8; // In hours
+
     @POST
-    public void  receiveAlert( ReciveAlert reciveAlert) {
+    public void receiveAlert(ReciveAlert reciveAlert) {
         String clientIp = routingContext.request().remoteAddress().host();
-     //   notificationService.SendEmail(clientIp,reciveAlert);
+        if (lastReceived == 0 || lastReceived + (60000L * 60000 * IGNORE_DURATION) >= System.currentTimeMillis()) {
+            notificationService.SendEmail(clientIp, reciveAlert);
+            lastReceived = System.currentTimeMillis();
+        }
         System.out.println(reciveAlert.toString());
     }
 

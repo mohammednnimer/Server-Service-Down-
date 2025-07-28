@@ -20,5 +20,6 @@ public interface SystemPaths {
 
     String exist="Object already exist";
 
+    String DATA_ACCEPTER = "/agents";
 
 }
