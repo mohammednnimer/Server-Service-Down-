@@ -33,13 +33,11 @@ public class ALertResource {
     private final int IGNORE_DURATION = 8;
     @POST
     public void receiveAlert(ReciveAlert reciveAlert) {
-        String clientIp = routingContext.request().remoteAddress().host();
         if (lastReceived == 0 || lastReceived + (60000L * 60000 * IGNORE_DURATION) >= System.currentTimeMillis()) {
-          //  notificationService.SendEmail(clientIp, reciveAlert);
+        //    notificationService.SendEmail(reciveAlert.getClientUtilization().getIp(), reciveAlert);
             lastReceived = System.currentTimeMillis();
         }
 
-        System.out.println(clientIp +"        ");
      //   System.out.println(reciveAlert.toString());
     }
 

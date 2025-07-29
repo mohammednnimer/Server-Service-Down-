@@ -5,6 +5,7 @@ import com.asd.dto.SearchCriteria;
 import com.asd.dto.UpdateServer;
 import com.asd.repository.ServerRepo;
 
+import com.asd.repository.ThresholdRepo;
 import com.db.entitie.PanelServer;
 import com.utils.constant.ErrorMsgs;
 import com.utils.constant.SuccMsgs;
@@ -23,12 +24,16 @@ import java.util.UUID;
 public class ServerService {
 
 
+
+    @Inject
+    ThresholdRepo thresholdRepo;
     @Inject
     ServerRepo serverRepo;
 
 
 //    public List<PanelServer> GetAllServer(int limit, int page){
 //        return serverRepo.GetAllServer(limit, page);
+//    }
 //    }
 
 //    public List<PanelServer> ListByDNSAndIP(String DNS,String IP) {
@@ -50,10 +55,13 @@ public class ServerService {
         }
 
 
+
         server.setId(UUID.randomUUID().toString());
         server.setCreationDate(LocalDateTime.now());
         server.setIsdeleted(false);
+
         serverRepo.persist(server);
+        thresholdRepo.addthreshlod(server.getIpAddress());
         return true;
 
     }
@@ -69,9 +77,12 @@ public class ServerService {
         else{
             service.setIsdeleted(true);
             service.setUpdatedDate(LocalDateTime.now());
+            thresholdRepo.delete(service.getIpAddress());
             return true;
         }
     }
+
+
     @Transactional
     public boolean update(UpdateServer updatedServer) {
         PanelServer existingServer = serverRepo.getServer(updatedServer.getId());

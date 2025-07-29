@@ -7,11 +7,13 @@ import com.asd.logic.servicedown.loaders.Loaders;
 import com.asd.logic.servicedown.models.EmailConfigModel;
 import com.asd.repository.EmailRepo;
 import com.db.entitie.EmailParticipants;
+import com.db.entitie.Threshold_Setting;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,6 +28,13 @@ public class NotificationService {
 
     @Inject
     Loaders loaders;
+
+
+
+    @Inject
+    ThresoldService thresoldService;
+
+
 
     private void sendEmail(EmailNotification notification) {
         final EmailConfigModel emailConfig = loaders.loadEmailConfig();
@@ -50,13 +59,9 @@ public class NotificationService {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(emailConfig.getFrom()));
-
             for (EmailParticipants recipient : emailRepo.getAllParticipants()) {
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient.getEmail().trim()));
-            }
-
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient.getEmail().trim()));}
             message.setSubject("System Alert Notification from " + notification.getClientIp());
-
             StringBuilder emailBody = new StringBuilder();
             emailBody.append("<html><body>")
                     .append("<h2>Alert Notification</h2>")
@@ -90,6 +95,10 @@ public class NotificationService {
 
     }
 
+    long cpu_threshold=150;
+    long ram_threshold=90;
+    long hard_disk_threshold=85;
+
     public void SendEmail(String ip, ReciveAlert reciveAlert) {
         EmailNotification emailNotification = new EmailNotification();
 
@@ -98,22 +107,36 @@ public class NotificationService {
 
         List<HarddiskUsage> harddisk = new ArrayList<>();
 
+        Threshold_Setting thresholdSetting= thresoldService.getserverThresould(ip);
+
+
+
+
+        if(thresholdSetting!=null)
+        {
+            cpu_threshold=thresholdSetting.getCpu_threshold();
+            ram_threshold=thresholdSetting.getRam_threshold();
+            hard_disk_threshold=thresholdSetting.getHard_disk_threshold();
+        }
+
         reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions().forEach(partition -> {
-            if (partition.getUtilization() > 85) {
+            if (partition.getUtilization() > hard_disk_threshold) {
                 harddisk.add(new HarddiskUsage(partition.getPath(), partition.getUtilization()));
             }
         });
 
+
+
+
         boolean alertNeeded = false;
         StringBuilder alertMsg = new StringBuilder("Alert triggered for client IP: ").append(ip).append("\n");
 
-        if (cpuUtil > 150) {
+        if (cpuUtil > cpu_threshold) {
             alertNeeded = true;
             alertMsg.append("CPU usage is high: ")
                     .append(String.format("%.2f", cpuUtil)).append("%\n");
         }
-
-        if (ramUtil > 90) {
+        if (ramUtil > ram_threshold) {
             alertNeeded = true;
             alertMsg.append("RAM usage is high: ")
                     .append(String.format("%.2f", ramUtil)).append("%\n");
@@ -127,6 +150,9 @@ public class NotificationService {
                         .append(String.format("%.2f", disk.getHarddiskUtilization())).append("%\n");
             }
         }
+        System.out.println(cpu_threshold +" cpuu");
+
+
         if (alertNeeded) {
             emailNotification.setClientIp(ip);
             emailNotification.setMessage(alertMsg.toString());

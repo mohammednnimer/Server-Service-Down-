@@ -59,8 +59,19 @@ public class AgentResource {
 
     }
 
+    @GET
+    @Path("/get_agent_by_server_id")
+    public Response getAgent(String id)
+    {
+        Agent agent= agentService.getAgent(id);
+        if(agent!=null)
+        {
+            return Response.ok().entity(agent).build();
+        }
 
 
+        return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+    }
 
 
 

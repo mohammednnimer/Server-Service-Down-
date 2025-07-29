@@ -33,6 +33,12 @@ public class AgentService {
 
 
     }
+    public Agent getAgent(String id)
+    {
+        return agentRepo.findByServerId(id);
+
+
+    }
 
 
 

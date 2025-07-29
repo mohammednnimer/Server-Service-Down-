@@ -10,5 +10,6 @@ public interface SuccMsgs {
    String updatesucc="Updated succeeded";
    String addsucc="The entry process was successful.";
    String agentsucc="Agent deleted successfully.";
+   String   Thresholds="Thresholds updated successfully";
 
 }
