@@ -34,7 +34,6 @@ public class AgentResource {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Agent not found").build();
         }
-        System.out.println(agent.getKeywords().get(0));
         return Response.ok(agent).build();
     }
 
