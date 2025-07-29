@@ -27,7 +27,7 @@ public class AgentService {
 
     public String getToken(String id)
     {
-        return agentRepo.findByServerId(id).getServer();
+        return agentRepo.findByServerId(id).getToken();
 
     }
 
