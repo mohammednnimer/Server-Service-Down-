@@ -71,8 +71,8 @@ public class AgentResource {
     }
 
      @DELETE
-    @Path("/{token}")
-    public Response deleteAgent(@PathParam("token") String token) {
+    @Path("/{server_id}")
+    public Response deleteAgent(@PathParam("server_id") String token) {
         return agentService.deleteAgent(token);
     }
 }

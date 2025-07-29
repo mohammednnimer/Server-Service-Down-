@@ -22,5 +22,11 @@ public class AgentRepo implements PanacheRepository<Agent> {
         return count("token = ?1", token) > 0;
     }
 
+    public int deleteByID(String serverId) {
+        return getEntityManager().createQuery("delete from Agent where server = :server")
+                .setParameter("server", serverId)
+                .executeUpdate();
+    }
+
 
 }

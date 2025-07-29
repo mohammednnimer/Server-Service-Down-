@@ -3,6 +3,8 @@ package com.asd.service;
 import com.asd.dto.AgentDto;
 import com.asd.repository.AgentRepo;
 import com.db.entitie.Agent;
+import com.utils.constant.ErrorMsgs;
+import com.utils.constant.SuccMsgs;
 import com.utils.functions.ASDKey;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,6 +31,7 @@ public class AgentService {
     {
         return agentRepo.findByServerId(id).getToken();
 
+
     }
 
 
@@ -38,9 +41,9 @@ public class AgentService {
         if (agent.getToken() == null || agent.getToken().isBlank()) {
             agent.setToken(ASDKey.generate4096BitKey(agent.getToken()));
         }
-        if (agentRepo.existsByToken(agent.getToken())) {
+        if (agentRepo.findByServerId(agent.getServer())!=null) {
             return Response.status(Response.Status.CONFLICT)
-                    .entity("Agent with same token already exists.").build();
+                    .entity(ErrorMsgs.conflict).build();
         }
         agentRepo.persist(agent);
         return Response.status(Response.Status.CREATED).entity(agent.getToken()).build();
@@ -50,7 +53,7 @@ public class AgentService {
     public Response updateAgent(String token, AgentDto updatedAgent) {
         Agent existing = agentRepo.findByToken(token);
         if (existing == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Agent not found.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity(ErrorMsgs.NotFound).build();
         }
         if (updatedAgent.getKeywords() != null) {
             existing.setKeywords(updatedAgent.getKeywords());
@@ -65,12 +68,14 @@ public class AgentService {
 
     @Transactional
     public Response deleteAgent(String token) {
-        Agent agent = agentRepo.findByToken(token);
-        if (agent == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Agent not found.").build();
-        }
 
-        agentRepo.delete(agent);
-        return Response.ok("Agent deleted successfully.").build();
+        int count =agentRepo.deleteByID(token);
+
+        if(count==0)
+        {
+            return Response.status(Response.Status.NOT_FOUND).entity(ErrorMsgs.NotFound).build();
+
+        }
+        return Response.ok(SuccMsgs.agentsucc).build();
     }
 }
