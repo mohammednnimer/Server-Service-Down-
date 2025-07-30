@@ -62,7 +62,7 @@ public class AgentResource {
 
     @GET
     @Path("/get_agent_by_server_id")
-    public Response getAgent(String id)
+    public Response getAgent(@QueryParam("id") String id)
     {
         Agent agent= agentService.getAgent(id);
         if(agent!=null)
