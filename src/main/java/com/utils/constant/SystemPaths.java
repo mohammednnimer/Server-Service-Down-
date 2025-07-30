@@ -17,6 +17,7 @@ public interface SystemPaths {
     String whatsApp="/settings/whatsapp";
     String add="/add";
     String alert="/alert";
+    String baseurl="http://localhost:40006";
 
     String exist="Object already exist";
 

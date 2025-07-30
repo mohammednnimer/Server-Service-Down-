@@ -5,19 +5,27 @@ import com.asd.dto.ClientUtilization;
 import com.asd.dto.EmailNotification;
 import com.asd.dto.ReciveAlert;
 import com.asd.dto.sub.Alert;
+import com.asd.dto.sub.HarddiskUsage;
+import com.asd.dto.sub.PartitionInfo;
+import com.asd.repository.AgentLiveServerRepository;
+import com.asd.service.AgentLiveServerService;
 import com.asd.service.NotificationService;
+import com.db.entitie.AgentLiveServer;
+import com.db.entitie.Harddisk;
+
 import com.utils.constant.SystemPaths;
 import io.vertx.ext.web.RoutingContext;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.io.BufferedReader;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path(SystemPaths.alert)
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,6 +33,10 @@ import java.io.BufferedReader;
 public class ALertResource {
     @Inject
     RoutingContext routingContext;
+
+    @Inject
+    AgentLiveServerService agentLiveServerService;
+
 
     @Inject
     NotificationService notificationService;
@@ -37,9 +49,36 @@ public class ALertResource {
         //    notificationService.SendEmail(reciveAlert.getClientUtilization().getIp(), reciveAlert);
             lastReceived = System.currentTimeMillis();
         }
+        AgentLiveServer agentLiveServer=new AgentLiveServer();
+        agentLiveServer.setIpAddress(reciveAlert.getClientUtilization().getIp());
+        agentLiveServer.setCpuUtilization(reciveAlert.getClientUtilization().getCpuUtilzation().getUtilization());
+        agentLiveServer.setRamUtilization(reciveAlert.getClientUtilization().getRamUtilzation().getUtilization());
+        int i=0;
+
+        List<Harddisk> harddisks=new ArrayList<>();
+         for(PartitionInfo partitionInfo:reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions())
+         {
+
+             Harddisk harddiskUsage=new Harddisk(partitionInfo.getPath(),partitionInfo.getUtilization());
+             harddisks.add(harddiskUsage);
+
+         }
+         agentLiveServer.setHarddiskUtilizations(harddisks);
+        agentLiveServer.setLastUpdate(LocalDateTime.now());
+
+        System.out.println("mohammmmmmmmmmmmmmmmmmmmmm");
+        agentLiveServerService.saveOrUpdate(agentLiveServer);
+
 
      //   System.out.println(reciveAlert.toString());
     }
+
+    @GET
+    @Path("/get-agentliveserver-byId/{ip}")
+    public Response getAgentLiveServerById(@PathParam("ip") String ip) {return Response.ok().entity(agentLiveServerService.finsbyip(ip)).build();}
+
+
+
 
 
 }

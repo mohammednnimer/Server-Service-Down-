@@ -68,11 +68,11 @@ public class ServiceResource {
     public Response UpdateService(UpdateService service) {
         return ServicePanel.UpdateService(service);
     }
-    @GET
-    @Path(SystemPaths.Byserver)
-    public Response GetServiceByServerID(@QueryParam("id") String id) {
-        return ServicePanel.GetServiceById(id);
-    }
+//    @GET
+//    @Path(SystemPaths.Byserver)
+//    public Response GetServiceByServerID(@QueryParam("id") String id) {
+//        return ServicePanel.GetServiceById(id);
+//    }
 
     @GET
     @Path("check")

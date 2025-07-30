@@ -6,13 +6,11 @@ import com.asd.dto.sub.RamUtilzation;
 
 public class ClientUtilization {
 
-
     public ClientUtilization(CpuUtilization cpuUtilzation, HarddiskUtilization harddiskUtilization, RamUtilzation ramUtilzation) {
         this.cpuUtilzation = cpuUtilzation;
         this.harddiskUtilization = harddiskUtilization;
         this.ramUtilzation = ramUtilzation;
     }
-
     public ClientUtilization() {
     }
 
