@@ -27,6 +27,67 @@ public class AgentLiveServer {
     @Column(name = "last_update")
     private LocalDateTime lastUpdate;
 
+
+
+    @Column(name = "physical_cores")
+    private Integer physicalCores;
+
+    @Column(name = "logical_cores")
+    private Integer logicalCores;
+
+    @Column(name = "free_ram")
+    private Long  freeRam;
+
+    @Column(name = "total_ram")
+    private Long  totalRam;
+
+    @Column(name = "used_ram")
+    private Long  usedRam;
+
+
+
+
+
+    public Integer getPhysicalCores() {
+        return physicalCores;
+    }
+
+    public void setPhysicalCores(Integer physicalCores) {
+        this.physicalCores = physicalCores;
+    }
+
+    public Integer getLogicalCores() {
+        return logicalCores;
+    }
+
+    public void setLogicalCores(Integer logicalCores) {
+        this.logicalCores = logicalCores;
+    }
+
+    public Long  getFreeRam() {
+        return freeRam;
+    }
+
+    public void setFreeRam(Long  freeRam) {
+        this.freeRam = freeRam;
+    }
+
+    public Long  getTotalRam() {
+        return totalRam;
+    }
+
+    public void setTotalRam(Long  totalRam) {
+        this.totalRam = totalRam;
+    }
+
+    public Long  getUsedRam() {
+        return usedRam;
+    }
+
+    public void setUsedRam(Long  usedRam) {
+        this.usedRam = usedRam;
+    }
+
     public String getIpAddress() {
         return ipAddress;
     }

@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.persistence.Column;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -150,7 +150,7 @@ public class NotificationService {
                         .append(String.format("%.2f", disk.getHarddiskUtilization())).append("%\n");
             }
         }
-        System.out.println(cpu_threshold +" cpuu");
+        System.out.println(cpu_threshold +" cpu");
 
 
         if (alertNeeded) {

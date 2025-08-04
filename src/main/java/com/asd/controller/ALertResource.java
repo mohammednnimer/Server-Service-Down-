@@ -50,6 +50,19 @@ public class ALertResource {
             lastReceived = System.currentTimeMillis();
         }
         AgentLiveServer agentLiveServer=new AgentLiveServer();
+        agentLiveServer.setFreeRam(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
+
+        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
+        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
+
+        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
+
+
+        agentLiveServer.setLogicalCores(reciveAlert.getClientUtilization().getCpuUtilzation().getLogicalCores());
+
+        agentLiveServer.setPhysicalCores(reciveAlert.getClientUtilization().getCpuUtilzation().getPhysicalCores());
+        agentLiveServer.setUsedRam(reciveAlert.getClientUtilization().getRamUtilzation().getUsed());
+        agentLiveServer.setTotalRam(reciveAlert.getClientUtilization().getRamUtilzation().getTotal());
         agentLiveServer.setIpAddress(reciveAlert.getClientUtilization().getIp());
         agentLiveServer.setCpuUtilization(reciveAlert.getClientUtilization().getCpuUtilzation().getUtilization());
         agentLiveServer.setRamUtilization(reciveAlert.getClientUtilization().getRamUtilzation().getUtilization());
@@ -58,24 +71,24 @@ public class ALertResource {
         List<Harddisk> harddisks=new ArrayList<>();
          for(PartitionInfo partitionInfo:reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions())
          {
-
              Harddisk harddiskUsage=new Harddisk(partitionInfo.getPath(),partitionInfo.getUtilization());
+             harddiskUsage.setFree(partitionInfo.getFreeSpace());
+             harddiskUsage.setTotalSpace(partitionInfo.getTotalSpace());
+             harddiskUsage.setUsedSpace(partitionInfo.getUsedSpace());
              harddisks.add(harddiskUsage);
 
-         }
-         agentLiveServer.setHarddiskUtilizations(harddisks);
+         }agentLiveServer.setHarddiskUtilizations(harddisks);
         agentLiveServer.setLastUpdate(LocalDateTime.now());
 
         System.out.println("mohammmmmmmmmmmmmmmmmmmmmm");
         agentLiveServerService.saveOrUpdate(agentLiveServer);
 
 
-     //   System.out.println(reciveAlert.toString());
-    }
+   }
 
     @GET
     @Path("/get-agentliveserver-byId/{ip}")
-    public Response getAgentLiveServerById(@PathParam("ip") String ip) {return Response.ok().entity(agentLiveServerService.finsbyip(ip)).build();}
+    public Response getAgentLiveServerById(@PathParam("ip") String ip) {return Response.ok().entity(agentLiveServerService.findbyip(ip)).build();}
 
 
 

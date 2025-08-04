@@ -21,9 +21,11 @@ public class Agent {
         return manager_ip;
     }
 
+
     public void setManager_ip(String manager_ip) {
         this.manager_ip = manager_ip;
     }
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "agent_keywords", joinColumns = @JoinColumn(name = "agent_token"))
@@ -67,8 +69,6 @@ public class Agent {
     public void setPorts(List<Ports> ports) {
         this.ports = ports;
     }
-
-
 
 
 }
