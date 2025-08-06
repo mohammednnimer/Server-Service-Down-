@@ -7,6 +7,8 @@ import com.asd.dto.ReciveAlert;
 import com.asd.dto.sub.Alert;
 import com.asd.dto.sub.HarddiskUsage;
 import com.asd.dto.sub.PartitionInfo;
+import com.asd.dto.sub.ProcessReport;
+import com.asd.mapper.ProcessMapper;
 import com.asd.repository.AgentLiveServerRepository;
 import com.asd.service.AgentLiveServerService;
 import com.asd.service.NotificationService;
@@ -49,46 +51,15 @@ public class ALertResource {
         //    notificationService.SendEmail(reciveAlert.getClientUtilization().getIp(), reciveAlert);
             lastReceived = System.currentTimeMillis();
         }
-        AgentLiveServer agentLiveServer=new AgentLiveServer();
-        agentLiveServer.setFreeRam(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
-
-        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
-        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
-
-        System.out.println(reciveAlert.getClientUtilization().getRamUtilzation().getFree());
-
-
-        agentLiveServer.setLogicalCores(reciveAlert.getClientUtilization().getCpuUtilzation().getLogicalCores());
-
-        agentLiveServer.setPhysicalCores(reciveAlert.getClientUtilization().getCpuUtilzation().getPhysicalCores());
-        agentLiveServer.setUsedRam(reciveAlert.getClientUtilization().getRamUtilzation().getUsed());
-        agentLiveServer.setTotalRam(reciveAlert.getClientUtilization().getRamUtilzation().getTotal());
-        agentLiveServer.setIpAddress(reciveAlert.getClientUtilization().getIp());
-        agentLiveServer.setCpuUtilization(reciveAlert.getClientUtilization().getCpuUtilzation().getUtilization());
-        agentLiveServer.setRamUtilization(reciveAlert.getClientUtilization().getRamUtilzation().getUtilization());
-        int i=0;
-
-        List<Harddisk> harddisks=new ArrayList<>();
-         for(PartitionInfo partitionInfo:reciveAlert.getClientUtilization().getHarddiskUtilization().getPartitions())
-         {
-             Harddisk harddiskUsage=new Harddisk(partitionInfo.getPath(),partitionInfo.getUtilization());
-             harddiskUsage.setFree(partitionInfo.getFreeSpace());
-             harddiskUsage.setTotalSpace(partitionInfo.getTotalSpace());
-             harddiskUsage.setUsedSpace(partitionInfo.getUsedSpace());
-             harddisks.add(harddiskUsage);
-
-         }agentLiveServer.setHarddiskUtilizations(harddisks);
-        agentLiveServer.setLastUpdate(LocalDateTime.now());
-
-        System.out.println("mohammmmmmmmmmmmmmmmmmmmmm");
-        agentLiveServerService.saveOrUpdate(agentLiveServer);
-
-
+         agentLiveServerService.saveOrUpdate(reciveAlert);
    }
+
+
 
     @GET
     @Path("/get-agentliveserver-byId/{ip}")
-    public Response getAgentLiveServerById(@PathParam("ip") String ip) {return Response.ok().entity(agentLiveServerService.findbyip(ip)).build();}
+    public Response getAgentLiveServerById(@PathParam("ip") String ip) {
+        return Response.ok().entity(agentLiveServerService.findbyip(ip)).build();}
 
 
 

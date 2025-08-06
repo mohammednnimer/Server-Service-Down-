@@ -21,6 +21,19 @@ public class AgentLiveServer {
     @JoinColumn(name = "server_ip")
     private List<Harddisk> harddiskUtilizations;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "process_report")
+    private List<ProcessReport> ProecessReport;
+
+    public List<ProcessReport> getProecessReport() {
+        return ProecessReport;
+    }
+
+
+    public void setProecessReport(List<ProcessReport> proecessReport) {
+        ProecessReport = proecessReport;
+    }
+
     @Column(name = "ram_utilization")
     private double ramUtilization;
 
