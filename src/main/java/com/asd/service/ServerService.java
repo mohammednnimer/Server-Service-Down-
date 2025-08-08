@@ -53,13 +53,9 @@ public class ServerService {
         if(serverRepo.isExist(server.getDns(), server.getIpAddress())){
            return false;
         }
-
-
-
         server.setId(UUID.randomUUID().toString());
         server.setCreationDate(LocalDateTime.now());
         server.setIsdeleted(false);
-
         serverRepo.persist(server);
         thresholdRepo.addthreshlod(server.getIpAddress());
         return true;

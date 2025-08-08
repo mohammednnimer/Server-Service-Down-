@@ -10,6 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Path("/agents")
@@ -41,9 +42,6 @@ public class AgentResource {
     public Response createAgent(Agent agent) {
         return agentService.createAgent(agent);
     }
-
-
-
     @GET
     @Path("get-token/{id}")
     public Response getToken(@PathParam("id") String id )
@@ -53,13 +51,9 @@ public class AgentResource {
         {
             return Response.ok().entity(new Token(token)).build();
         }
-
-
         return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 
     }
-
-
     @GET
     @Path("/get_agent_by_server_id")
     public Response getAgent(@QueryParam("id") String id)
@@ -69,22 +63,48 @@ public class AgentResource {
         {
             return Response.ok().entity(agent).build();
         }
-
-
         return Response.status(Response.Status.NOT_ACCEPTABLE).build();
     }
 
 
+    @GET
+    @Path("/getipbytoken")
+    public Response getip(@QueryParam("token") String token)
+    {
+        return Response.ok().entity(agentService.getip(token)).build();
+
+    }
 
     @PUT
     @Path("/{token}")
     public Response updateAgent(@PathParam("token") String token, AgentDto updatedAgent) {
-        return agentService.updateAgent(token, updatedAgent);
+
+
+        try {
+            return agentService.updateAgent(token, updatedAgent);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
+
+    @GET
+    @Path("sendagent/{token}")
+   public Response initialized(@PathParam("token") String token){
+        try {
+            return agentService.sendAgent(token);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
      @DELETE
     @Path("/{server_id}")
     public Response deleteAgent(@PathParam("server_id") String token) {
+
         return agentService.deleteAgent(token);
     }
 }

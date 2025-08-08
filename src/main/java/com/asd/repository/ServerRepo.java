@@ -53,7 +53,7 @@ public class ServerRepo implements PanacheRepository<PanelServer> {
     }
 
     public boolean isExist(String dns,String ip){
-        return (find("dns = ?1 and ipAddress = ?2",dns,ip).count() > 0);
+        return (find("dns = ?1 and ipAddress = ?2 and isdeleted = false ",dns,ip).count() > 0);
     }
 
 
