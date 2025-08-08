@@ -102,7 +102,7 @@ public class AgentResource {
 
      @DELETE
     @Path("/{server_id}")
-    public Response deleteAgent(@PathParam("server_id") String token) throws URISyntaxException {
-        return agentService.deleteAgent(token);
+    public Response deleteAgent(@PathParam("server_id") String server_id) throws URISyntaxException {
+        return agentService.deleteAgent(server_id);
     }
 }

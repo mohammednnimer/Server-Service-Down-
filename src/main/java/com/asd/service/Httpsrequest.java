@@ -23,10 +23,10 @@ public interface Httpsrequest
     Response SendAgent(Agent agent);
 
     @PUT
-    @Path("/deleteAgent")
+    @Path("/getConfig/deleteAgent")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response deleetagent();
+    Response deleteAgent();
 
 
 

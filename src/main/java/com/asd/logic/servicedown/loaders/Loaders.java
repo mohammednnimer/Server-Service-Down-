@@ -36,8 +36,13 @@ public class Loaders {
 
     public WhatsAppConfigModel loadWhatsAppConfigUtil() {
         GeneralSettings url = settingRepo.getSetting("whatsapp_url");
-        System.out.println(url.getSettingValue() + "!!!!!");
-        whatsAppConfigModel.setUrl(url.getSettingValue());
+        if (url != null) {
+            System.out.println(url.getSettingValue() + "!!!!!");
+            whatsAppConfigModel.setUrl(url.getSettingValue());
+        } else {
+
+        }
+
 
         return null ;
     }

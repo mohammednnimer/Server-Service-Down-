@@ -58,10 +58,7 @@ public class AgentLiveServerService {
         incoming.setProecessReport(processReports);
         incoming.setHarddiskUtilizations(harddisks);
         incoming.setLastUpdate(LocalDateTime.now());
-
-
         AgentLiveServer existing = repository.findByIp(incoming.getIpAddress());
-
         if (existing != null) {
             System.out.println("1");
             existing.setCpuUtilization(incoming.getCpuUtilization());
@@ -85,11 +82,9 @@ public class AgentLiveServerService {
                     existing.getProecessReport().add(pr);
                 }
             }
-
             for (Harddisk hd : incoming.getHarddiskUtilizations()) {
                 existing.getHarddiskUtilizations().add(hd);
             }
-
             return existing;
         } else {
             System.out.println("2");

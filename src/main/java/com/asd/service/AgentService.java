@@ -84,7 +84,7 @@ public class AgentService {
         if (isupdate) {
             String ip = agentRepo.getServerIpByToken(existing.getToken());
             Httpsrequest client = RestClientBuilder.newBuilder()
-                    .baseUri(new URI("http://172.20.10.2"  + ":40006"))
+                    .baseUri(new URI("http://localhost"  + ":40006"))
                     .build(Httpsrequest.class);
             Response responseFromServer = client.SendAgent(existing);
 
@@ -108,7 +108,7 @@ public class AgentService {
         Agent existing = agentRepo.findByToken(token);
         String ip = agentRepo.getServerIpByToken(existing.getToken());
         Httpsrequest client = RestClientBuilder.newBuilder()
-                .baseUri(new URI("http://172.20.10.2" + ":40006"))
+                .baseUri(new URI("http://localhost" + ":40006"))
                 .build(Httpsrequest.class);
         Response responseFromServer = client.SendAgent(existing);
 
@@ -125,19 +125,21 @@ public class AgentService {
     }
 
     @Transactional
-    public Response deleteAgent(String token) throws URISyntaxException {
+    public Response deleteAgent(String serverid) throws URISyntaxException {
 
-        int count =agentRepo.deleteByID(token);
 
-        if(count==0)
+
+        Agent agent=agentRepo.findByServerId(serverid);
+        if(agent==null)
         {
             return Response.status(Response.Status.NOT_FOUND).entity(ErrorMsgs.NotFound).build();
-
         }
+        agentRepo.delete(agent);
+
         Httpsrequest client = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost" + ":40006"))
                 .build(Httpsrequest.class);
-        Response responseFromServer = client.deleetagent();
+        Response responseFromServer = client.deleteAgent();
         if (responseFromServer.getStatus() == 200) {
             String responseBody = responseFromServer.readEntity(String.class);
             System.out.println("Response from server: " + responseBody);
