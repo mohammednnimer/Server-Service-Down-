@@ -125,7 +125,7 @@ public class AgentService {
     }
 
     @Transactional
-    public Response deleteAgent(String token) {
+    public Response deleteAgent(String token) throws URISyntaxException {
 
         int count =agentRepo.deleteByID(token);
 
@@ -134,6 +134,17 @@ public class AgentService {
             return Response.status(Response.Status.NOT_FOUND).entity(ErrorMsgs.NotFound).build();
 
         }
+        Httpsrequest client = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost" + ":40006"))
+                .build(Httpsrequest.class);
+        Response responseFromServer = client.deleetagent();
+        if (responseFromServer.getStatus() == 200) {
+            String responseBody = responseFromServer.readEntity(String.class);
+            System.out.println("Response from server: " + responseBody);
+        } else {
+            System.out.println("Failed to send agent data. Status: " + responseFromServer.getStatus());
+        }
+        responseFromServer.close();
         return Response.ok(SuccMsgs.agentsucc).build();
     }
 }

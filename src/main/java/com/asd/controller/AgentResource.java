@@ -72,7 +72,6 @@ public class AgentResource {
     public Response getip(@QueryParam("token") String token)
     {
         return Response.ok().entity(agentService.getip(token)).build();
-
     }
 
     @PUT
@@ -103,8 +102,7 @@ public class AgentResource {
 
      @DELETE
     @Path("/{server_id}")
-    public Response deleteAgent(@PathParam("server_id") String token) {
-
+    public Response deleteAgent(@PathParam("server_id") String token) throws URISyntaxException {
         return agentService.deleteAgent(token);
     }
 }

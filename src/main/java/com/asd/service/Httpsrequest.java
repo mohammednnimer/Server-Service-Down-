@@ -22,6 +22,14 @@ public interface Httpsrequest
     @Produces(MediaType.APPLICATION_JSON)
     Response SendAgent(Agent agent);
 
+    @PUT
+    @Path("/deleteAgent")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response deleetagent();
+
+
+
 
 
 }
