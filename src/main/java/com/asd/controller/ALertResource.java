@@ -52,7 +52,6 @@ public class ALertResource {
             lastReceived = System.currentTimeMillis();
         }
          agentLiveServerService.saveOrUpdate(reciveAlert);
-
     }
 
     @GET

@@ -98,6 +98,12 @@ public class AgentResource {
         }
     }
 
+    @GET
+    @Path("/get_live_status/{Server_ip}")
+    public Response getLiveStatus(@PathParam("Server_ip") String Server_ip) throws URISyntaxException {
+
+        return agentService.getLiveAgent(Server_ip);
+    }
 
 
      @DELETE

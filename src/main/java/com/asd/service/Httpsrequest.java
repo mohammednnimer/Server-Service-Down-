@@ -28,6 +28,14 @@ public interface Httpsrequest
     @Produces(MediaType.APPLICATION_JSON)
     Response deleteAgent();
 
+    @GET
+    @Path("/getConfig/getLiveAgent")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response getLiveAgent();
+
+
+
 
 
 

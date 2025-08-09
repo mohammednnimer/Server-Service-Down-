@@ -1,8 +1,10 @@
 package com.asd.service;
 
 import com.asd.dto.AgentDto;
+import com.asd.dto.ReciveAlert;
 import com.asd.repository.AgentRepo;
 import com.db.entitie.Agent;
+import com.google.gson.Gson;
 import com.utils.constant.ErrorMsgs;
 import com.utils.constant.SuccMsgs;
 import com.utils.functions.ASDKey;
@@ -21,6 +23,10 @@ public class AgentService {
 
     @Inject
     AgentRepo agentRepo;
+
+
+    @Inject
+    AgentLiveServerService agentLiveServerService;
 
     public List<Agent> getAllAgents() {
         return agentRepo.listAll();
@@ -104,7 +110,6 @@ public class AgentService {
 
     public Response sendAgent(String token) throws URISyntaxException {
 
-
         Agent existing = agentRepo.findByToken(token);
         String ip = agentRepo.getServerIpByToken(existing.getToken());
         Httpsrequest client = RestClientBuilder.newBuilder()
@@ -124,11 +129,28 @@ public class AgentService {
 
     }
 
+    public Response getLiveAgent(String ip) throws URISyntaxException {
+
+        Httpsrequest client = RestClientBuilder.newBuilder()
+                .baseUri(new URI("http://localhost" + ":40006"))
+                .build(Httpsrequest.class);
+        Response responseFromServer = client.getLiveAgent();
+
+        if (responseFromServer.getStatus() == 200) {
+            String responseBody = responseFromServer.readEntity(String.class);
+
+            Gson gson =new Gson();
+            ReciveAlert reciveAlert =gson.fromJson(responseBody,ReciveAlert.class);
+            agentLiveServerService.saveOrUpdate(reciveAlert);
+            return Response.ok(reciveAlert).build();
+        } else {
+            System.out.println("Failed to send agent data. Status: " + responseFromServer.getStatus());
+        }
+        return Response.status(Response.Status.NOT_FOUND).entity(ErrorMsgs.NotFound).build();
+    }
+
     @Transactional
     public Response deleteAgent(String serverid) throws URISyntaxException {
-
-
-
         Agent agent=agentRepo.findByServerId(serverid);
         if(agent==null)
         {
