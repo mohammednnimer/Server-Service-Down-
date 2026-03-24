@@ -1,0 +1,35 @@
+package com.asd.service;
+
+import com.asd.repository.EmailRepo;
+import com.asd.repository.WhatsappRepo;
+import com.db.entitie.EmailParticipants;
+import com.db.entitie.WhatsappParticipants;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
+
+@ApplicationScoped
+public class WhatsAppservice {
+    @Inject
+    WhatsappRepo whatsappRepo;
+
+    @Transactional
+    public boolean addPhone(WhatsappParticipants whatsappParticipants){
+        if (whatsappRepo.existsByPhone(whatsappParticipants.getPhoneNumber())!=null) {
+            return false;
+        }
+        whatsappRepo.persist(whatsappParticipants);
+        return true;
+    }
+    @Transactional
+    public boolean deletephone(String phone){
+        long count= whatsappRepo.deletePhone(phone);
+        return count > 0;
+    }
+
+    public List<WhatsappParticipants> getAllParticipants() {
+        return whatsappRepo.getAllParticipants();
+    }
+}
