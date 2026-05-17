@@ -1,70 +1,352 @@
-# server-servies
+# 🚀 Intelligent Distributed Server Monitoring System
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+> Enterprise-grade distributed infrastructure monitoring and alerting platform designed for modern DevOps environments.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+---
 
-## Running the application in dev mode
+## 📌 Overview
 
-You can run your application in dev mode that enables live coding using:
+This repository contains a **powerful distributed monitoring system** built using a **two-project architecture** designed for large-scale server environments.
 
-```shell script
-./mvnw quarkus:dev
+The system continuously monitors:
+
+* 🖥️ Server health
+* ⚡ CPU utilization
+* 🧠 RAM / Memory usage
+* 🔌 Running services status
+* 🌐 Service ports
+* 📊 Infrastructure performance
+* 🚨 Critical threshold violations
+
+It supports both:
+
+* 🍏 macOS
+* 🐧 Linux Servers
+
+The architecture is designed for scalability, reliability, automation, and real-time incident response.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                ┌─────────────────────┐
+                │   Monitoring Agent  │
+                │ (Installed on Node) │
+                └─────────┬───────────┘
+                          │
+                          │ Sends Metrics
+                          ▼
+              ┌─────────────────────────┐
+              │   Central Monitoring    │
+              │        Server           │
+              └─────────┬───────────────┘
+                        │
+        ┌───────────────┼────────────────┐
+        ▼                               ▼
+  Threshold Analysis             Alert Engine
+        ▼                               ▼
+ Email Notifications         WhatsApp Escalation
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+---
 
-## Packaging and running the application
+# 📦 Projects Structure
 
-The application can be packaged using:
+## 1️⃣ Monitoring Agent Project
 
-```shell script
-./mvnw package
+This lightweight service is installed directly on every monitored server.
+
+### 🔍 Responsibilities
+
+* Collects:
+
+  * CPU utilization
+  * RAM usage
+  * Memory statistics
+  * Server status
+  * Running services information
+  * Port availability
+* Sends collected data periodically to the central server
+* Works on:
+
+  * Linux
+  * macOS
+* Supports scheduled execution:
+
+  * Every 5 minutes
+  * Every hour
+  * Custom intervals
+
+---
+
+### ⚙️ Features
+
+✅ Cross-platform support
+✅ Lightweight background service
+✅ Automatic health reporting
+✅ Service discovery by:
+
+* Service name
+* Partial service name
+* Port range
+
+✅ Dynamic port scanning
+
+Example:
+
+```text
+Scan all services running on ports:
+1000 → 10000
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+---
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+### 📡 Data Sent to Central Server
 
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```json
+{
+  "serverName": "production-node-1",
+  "cpuUsage": 82,
+  "memoryUsage": 68,
+  "services": [
+    {
+      "name": "nginx",
+      "status": "RUNNING",
+      "port": 8080
+    }
+  ]
+}
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+---
 
-## Creating a native executable
+# 2️⃣ Central Monitoring Server
 
-You can create a native executable using:
+The core intelligence layer of the platform.
 
-```shell script
-./mvnw package -Dnative
+This project receives, analyzes, and processes monitoring data from all connected servers.
+
+---
+
+## 🧠 Responsibilities
+
+### 📊 Metrics Analysis
+
+Analyzes:
+
+* CPU utilization
+* RAM consumption
+* Service health
+* Infrastructure stability
+* Port availability
+* Resource anomalies
+
+---
+
+### 🚨 Threshold Engine
+
+Example thresholds:
+
+| Metric       | Threshold | Status      |
+| ------------ | --------- | ----------- |
+| CPU Usage    | < 85%     | ✅ Healthy   |
+| CPU Usage    | > 85%     | ⚠️ Warning  |
+| Memory Usage | > 90%     | 🔥 Critical |
+
+---
+
+### 📧 Email Notification System
+
+If abnormal behavior is detected:
+
+* Detailed reports are generated
+* DevOps engineers receive alerts instantly
+* Includes:
+
+  * Server name
+  * Problem description
+  * Resource statistics
+  * Timestamp
+  * Recommended actions
+
+---
+
+### 📱 WhatsApp Escalation System
+
+If the issue remains unresolved for a configured duration (e.g. 2 days):
+
+✅ The system automatically escalates the alert
+✅ Sends WhatsApp notifications to responsible engineers
+✅ Ensures incidents are never ignored
+
+---
+
+# 🔥 Advanced Features
+
+## ✅ Intelligent Service Discovery
+
+Search services by:
+
+* Exact service name
+* Partial service name
+* Port range
+* Running status
+
+---
+
+## ✅ Real-Time Monitoring
+
+Near real-time infrastructure visibility.
+
+---
+
+## ✅ Automated Incident Escalation
+
+Multi-level alerting strategy:
+
+```text
+Warning → Email → WhatsApp Escalation
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+---
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+## ✅ Distributed Architecture
+
+Designed for:
+
+* Cloud infrastructure
+* Enterprise systems
+* Large-scale server farms
+* Microservices environments
+
+---
+
+## ✅ Extensible Design
+
+Easy integration with:
+
+* Docker
+* Kubernetes
+* Grafana
+* Prometheus
+* CI/CD Pipelines
+
+---
+
+# 🛠️ Technologies Used
+
+## Monitoring Agent
+
+* Java / Quarkus
+* REST APIs
+* Scheduled Jobs
+* System Metrics APIs
+
+---
+
+## Central Server
+
+* Java / Quarkus
+* RESTful Services
+* Background Processing
+* Alert Engine
+* Email Services
+* WhatsApp Integration
+
+---
+
+# 📈 Monitoring Workflow
+
+```text
+1. Agent collects metrics
+2. Metrics sent to central server
+3. Central server analyzes data
+4. Threshold validation executed
+5. Incident generated if necessary
+6. Email notification sent
+7. Escalation timer starts
+8. WhatsApp alert triggered if unresolved
 ```
 
-You can then execute your native executable with: `./target/server-servies-1.0-SNAPSHOT-runner`
+---
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+# 🔐 Reliability & Scalability
 
-## Related Guides
+The system was designed with:
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and
-  Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on
-  it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus
-  REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
+* High scalability
+* Fault tolerance
+* Distributed monitoring
+* Low resource consumption
+* Modular architecture
 
-## Provided Code
+in mind.
 
-### REST
+---
 
-Easily start your REST Web Services
+# 🎯 Use Cases
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+✅ Enterprise Infrastructure Monitoring
+✅ DevOps Automation
+✅ Data Centers
+✅ Cloud Servers
+✅ Production Systems
+✅ CI/CD Environments
+✅ High Availability Systems
+
+---
+
+# 🚀 Future Improvements
+
+* Grafana Dashboard Integration
+* AI-based anomaly detection
+* Historical analytics
+* Predictive infrastructure monitoring
+* Auto-recovery actions
+* Kubernetes-native deployment
+* Slack / Microsoft Teams integration
+
+---
+
+# 📬 Alert Example
+
+```text
+[CRITICAL ALERT]
+
+Server: production-node-3
+CPU Usage: 94%
+Memory Usage: 91%
+
+Detected Issues:
+- High CPU consumption
+- Memory pressure
+- nginx service instability
+
+Action Required Immediately.
+```
+
+---
+
+# 👨‍💻 Author
+
+Developed with passion for building scalable infrastructure monitoring systems and improving DevOps automation.
+
+---
+
+# ⭐ Final Notes
+
+This project demonstrates:
+
+* Distributed systems engineering
+* Infrastructure monitoring
+* Backend architecture
+* Automated alerting systems
+* DevOps best practices
+* Scalable software design
+
+---
+
+## 🌍 Enterprise Monitoring Made Smarter
+
+> “Monitor everything. Miss nothing.”
